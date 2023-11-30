@@ -12,11 +12,12 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
 from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+load_dotenv(BASE_DIR / '.env')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -27,15 +28,12 @@ SECRET_KEY = 'django-insecure-rfa=$w9kii+0vw57pw-rq+%=io5i98+6rqo%_kh&r=os_)2q@k
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG') == 'True'
 ALLOWED_HOSTS = ['localhost', '*', '127.0.0.1', os.getenv('ALLOWED_HOST')]
-ALLOWED_HOSTS = []
 ADMINS = [
     (os.getenv('ADMIN_NAME'), os.getenv('ADMIN_MAIL')),
 ]
 
 # Application definition
 INSTALLED_APPS = [
-    '',
-
     'rest_framework',
     'rest_framework_simplejwt',
     'drf_yasg',
