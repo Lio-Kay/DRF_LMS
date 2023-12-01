@@ -1,6 +1,5 @@
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinValueValidator, MaxValueValidator, validate_image_file_extension
-from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.auth.base_user import BaseUserManager
 from phonenumber_field.modelfields import PhoneNumberField
@@ -60,10 +59,10 @@ class User(AbstractUser):
         ('FEMALE', 'Женщина'),
         ('OTHER', 'Предпочитаю не указывать'),
     ]
-    gender = models.CharField(max_length=6, choices=gender_choices, validators='Гендер')
+    gender = models.CharField(max_length=6, choices=gender_choices, verbose_name='Гендер')
     phone = PhoneNumberField(**NULLABLE, verbose_name='Телефон')
     city = models.CharField(**NULLABLE, max_length=100, verbose_name='Город')
-    avatar = models.ImageField(upload_to='users/avatars/', **NULLABLE, verbose_name='Аватар',
+    avatar = models.ImageField(**NULLABLE, upload_to='users/avatars/', verbose_name='Аватар',
         validators=[
             validate_image_file_extension
         ]

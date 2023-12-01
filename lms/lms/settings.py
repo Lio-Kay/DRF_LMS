@@ -34,6 +34,8 @@ ADMINS = [
 
 # Application definition
 INSTALLED_APPS = [
+    'users.apps.UsersConfig',
+
     'rest_framework',
     'rest_framework_simplejwt',
     'drf_yasg',
@@ -114,6 +116,7 @@ STATIC_URL = 'static/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+AUTH_USER_MODEL = 'users.User'
 
 # DRF
 REST_FRAMEWORK = {
