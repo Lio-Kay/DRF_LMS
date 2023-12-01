@@ -46,9 +46,9 @@ class User(AbstractUser):
     username = None
 
     email = models.EmailField(unique=True, verbose_name='Email')
-    first_name = models.CharField(max_length=50, verbose_name='Имя')
-    last_name = models.CharField(max_length=50, verbose_name='Фамилия')
-    age = models.PositiveSmallIntegerField(verbose_name='Возраст',
+    first_name = models.CharField(**NULLABLE, max_length=50, verbose_name='Имя')
+    last_name = models.CharField(**NULLABLE, max_length=50, verbose_name='Фамилия')
+    age = models.PositiveSmallIntegerField(**NULLABLE, verbose_name='Возраст',
         validators=[
             MinValueValidator(12),
             MaxValueValidator(120)
@@ -59,7 +59,7 @@ class User(AbstractUser):
         ('FEMALE', 'Женщина'),
         ('OTHER', 'Предпочитаю не указывать'),
     ]
-    gender = models.CharField(max_length=6, choices=gender_choices, verbose_name='Гендер')
+    gender = models.CharField(max_length=6, choices=gender_choices, default='OTHER', verbose_name='Гендер')
     phone = PhoneNumberField(**NULLABLE, verbose_name='Телефон')
     city = models.CharField(**NULLABLE, max_length=100, verbose_name='Город')
     avatar = models.ImageField(**NULLABLE, upload_to='users/avatars/', verbose_name='Аватар',
