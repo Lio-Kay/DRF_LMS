@@ -40,7 +40,7 @@ class CustomUserManager(BaseUserManager):
         return self._create_user(email=email, password=password, **extra_fields)
 
 
-class User(AbstractUser):
+class CustomUser(AbstractUser):
     """Кастомная модель пользователя"""
 
     username = None
@@ -62,7 +62,7 @@ class User(AbstractUser):
     gender = models.CharField(max_length=6, choices=gender_choices, default='OTHER', verbose_name='Гендер')
     phone = PhoneNumberField(**NULLABLE, verbose_name='Телефон')
     city = models.CharField(**NULLABLE, max_length=100, verbose_name='Город')
-    avatar = models.ImageField(**NULLABLE, upload_to='users/avatars/', verbose_name='Аватар',
+    avatar = models.ImageField(**NULLABLE, upload_to='users/media/avatars/', verbose_name='Аватар',
         validators=[
             validate_image_file_extension
         ]
