@@ -35,6 +35,7 @@ ADMINS = [
 # Application definition
 INSTALLED_APPS = [
     'users.apps.UsersConfig',
+    'education.apps.EducationConfig',
 
     'rest_framework',
     'rest_framework_simplejwt',
