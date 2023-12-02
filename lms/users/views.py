@@ -1,7 +1,8 @@
 from rest_framework import generics, status
 from rest_framework.response import Response
 from django.contrib.auth import get_user_model
-
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
 
 from users.serializers import UserOwnerSerializer, UserViewOnlySerializer
 from users.permissions import IsOwner
@@ -15,13 +16,21 @@ class UserCreateListAPIView(generics.ListCreateAPIView):
 
     def create(self, request, *args, **kwargs):
         data = request.data
+        email = data.get('email')
+        try:
+            validate_email(email)
+            # TODO
+            # Add email blacklisting
+        except ValidationError:
+            return Response({'Ошибка': 'Недопустимый адрес электронной почты'}, status=status.HTTP_400_BAD_REQUEST)
+
         user = User.objects.create_user(
             email=data.get('email'),
             password=data.get('password'),
             first_name=data.get('first_name'),
             last_name=data.get('last_name'),
             age=data.get('age'),
-            gender=data.get('gender', 'OTHER'),
+            gender=data.get('gender'),
             phone=data.get('phone'),
             city=data.get('city'),
             avatar=data.get('avatar'),
