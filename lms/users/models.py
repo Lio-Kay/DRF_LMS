@@ -18,7 +18,6 @@ class CustomUserManager(BaseUserManager):
             raise ValueError('Введите email')
         if not password:
             raise ValueError('Введите пароль')
-
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
@@ -62,7 +61,7 @@ class CustomUser(AbstractUser):
         ('FEMALE', 'Женщина'),
         ('OTHER', 'Предпочитаю не указывать'),
     ]
-    gender = models.CharField(max_length=6, choices=gender_choices, default='OTHER', verbose_name='Гендер')
+    gender = models.CharField(**NULLABLE, max_length=6, choices=gender_choices, default='OTHER', verbose_name='Гендер')
     phone = PhoneNumberField(verbose_name='Телефон')
     city = models.CharField(**NULLABLE, max_length=100, verbose_name='Город')
     avatar = models.ImageField(**NULLABLE, upload_to='users/media/avatars/', verbose_name='Аватар',
@@ -74,7 +73,7 @@ class CustomUser(AbstractUser):
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['first_name', 'last_name', 'phone']
 
     def __str__(self):
         return f'{self.email, self.first_name, self.last_name}'
