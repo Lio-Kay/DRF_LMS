@@ -18,11 +18,15 @@ class UserCreateListAPIView(generics.ListCreateAPIView):
         user = User.objects.create_user(
             email=data.get('email'),
             password=data.get('password'),
-
+            first_name=data.get('first_name'),
+            last_name=data.get('last_name'),
+            age=data.get('age'),
+            gender=data.get('gender', 'OTHER'),
+            phone=data.get('phone'),
+            city=data.get('city'),
+            avatar=data.get('avatar'),
         )
-
         serializer = self.get_serializer(user)
-
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def get_serializer_class(self):
