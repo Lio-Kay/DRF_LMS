@@ -86,9 +86,23 @@ class Material(models.Model):
         ordering = 'name',
 
 
+class TestAnswer(models.Model):
+    answer = models.PositiveSmallIntegerField(verbose_name='Выбор варианта ответа')
+
+    def __str__(self):
+        return f'{self.answer}'
+
+    class Meta:
+        verbose_name = 'ответ на тест'
+        verbose_name_plural = 'ответы на тест'
+        ordering = 'answer',
+
+
 class TestQuestion(models.Model):
     """Модель вопроса теста"""
     question = models.TextField(verbose_name='Вопрос')
+    answer = models.OneToOneField(to=TestAnswer, on_delete=models.CASCADE, related_name='testquestion_answer')
+    choices = models.ManyToManyField(to=TestAnswer, related_name='testquestion_choices')
     media = models.ManyToManyField(to=Media, related_name='testquestion_media')
 
     def __str__(self):
