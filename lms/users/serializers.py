@@ -10,7 +10,8 @@ class UserOwnerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
-        fields = 'email', 'password', 'first_name', 'last_name', 'age', 'gender', 'phone', 'city', 'avatar',
+        fields = ('email', 'password', 'first_name', 'last_name', 'age',
+                  'gender', 'phone', 'city', 'avatar',)
 
 
 class UserViewOnlySerializer(serializers.ModelSerializer):

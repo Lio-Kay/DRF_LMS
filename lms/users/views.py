@@ -22,7 +22,8 @@ class UserCreateListAPIView(generics.ListCreateAPIView):
             # TODO
             # Add email blacklisting
         except ValidationError:
-            return Response({'Ошибка': 'Недопустимый адрес электронной почты'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'Ошибка': 'Недопустимый адрес электронной почты'},
+                            status=status.HTTP_400_BAD_REQUEST)
 
         user = User.objects.create_user(
             email=data.get('email'),
