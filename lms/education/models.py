@@ -86,24 +86,6 @@ class Material(models.Model):
         ordering = 'name',
 
 
-class Test(models.Model):
-    """Модель теста"""
-    material = models.OneToOneField(**NULLABLE, to=Material, on_delete=models.CASCADE,
-                                    related_name='test_material')
-    question = models.ManyToManyField(to=MaterialQuestion, related_name='test_question')
-
-    creation_date = models.DateTimeField(**NULLABLE, verbose_name='Дата создания')
-    last_update = models.DateTimeField(**NULLABLE, verbose_name='Дата последнего обновления')
-
-    def __str__(self):
-        return f'{self.material}, {self.question}'
-
-    class Meta:
-        verbose_name = 'тест'
-        verbose_name_plural = 'тесты'
-        ordering = 'material',
-
-
 class TestQuestion(models.Model):
     """Модель вопроса теста"""
     question = models.TextField(verbose_name='Вопрос')
@@ -116,3 +98,21 @@ class TestQuestion(models.Model):
         verbose_name = 'тест'
         verbose_name_plural = 'тесты'
         ordering = 'name',
+
+
+class Test(models.Model):
+    """Модель теста"""
+    material = models.OneToOneField(**NULLABLE, to=Material, on_delete=models.CASCADE,
+                                    related_name='test_material')
+    question = models.ManyToManyField(to=TestQuestion, related_name='test_question')
+
+    creation_date = models.DateTimeField(**NULLABLE, verbose_name='Дата создания')
+    last_update = models.DateTimeField(**NULLABLE, verbose_name='Дата последнего обновления')
+
+    def __str__(self):
+        return f'{self.material}, {self.question}'
+
+    class Meta:
+        verbose_name = 'тест'
+        verbose_name_plural = 'тесты'
+        ordering = 'material',
