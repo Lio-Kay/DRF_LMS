@@ -10,6 +10,7 @@ NULLABLE = {'blank': True, 'null': True}
 
 
 class Media(models.Model):
+    """Модель медиа"""
     name = models.CharField(max_length=100, verbose_name='Название')
 
     creation_date = models.DateTimeField(**NULLABLE, verbose_name='Дата создания')
@@ -74,10 +75,10 @@ class Material(models.Model):
     last_update = models.DateTimeField(**NULLABLE, verbose_name='Дата последнего обновления')
 
     media = models.ManyToManyField(to=Media, related_name='material_media')
-    section = models.ForeignKey(**NULLABLE, to=Section, on_delete=models.SET_NULL, related_name='section')
+    section = models.ForeignKey(**NULLABLE, to=Section, on_delete=models.SET_NULL, related_name='material_section')
 
     def __str__(self):
-        return f'{self.name}'
+        return f'{self.name}, {self.status}, {self.creation_date}'
 
     class Meta:
         verbose_name = 'материал'
