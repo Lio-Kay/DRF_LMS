@@ -3,20 +3,6 @@ from rest_framework import serializers
 from education.models import Section, Material, TestAnswer, TestQuestion
 
 
-class SectionListSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Section
-        fields = 'name', 'last_update', 'base_price', 'media',
-
-
-class SectionRetrieveSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Section
-        fields = 'name', 'description', 'last_update', 'base_price', 'media',
-
-
 class MaterialListSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -29,6 +15,23 @@ class MaterialRetrieveSerializer(serializers.ModelSerializer):
     class Meta:
         model = Material
         fields = 'name', 'section', 'text', 'last_update', 'media',
+
+
+class SectionListSerializer(serializers.ModelSerializer):
+    materials_count = serializers.IntegerField(source='material.all.count')
+
+    class Meta:
+        model = Section
+        fields = 'name', 'last_update', 'material', 'base_price', 'media',
+
+
+class SectionRetrieveSerializer(serializers.ModelSerializer):
+    materials_count = serializers.IntegerField(source='material.all.count')
+    materials = MaterialListSerializer(source='material', many=True, read_only=True)
+
+    class Meta:
+        model = Section
+        fields = 'name', 'description', 'last_update', 'base_price', 'media',
 
 
 class TestAnswerSerializer(serializers.ModelSerializer):
