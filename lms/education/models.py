@@ -183,3 +183,9 @@ class Test(models.Model):
         verbose_name = 'тест'
         verbose_name_plural = 'тесты'
         ordering = 'material',
+        constraints = [
+            models.CheckConstraint(
+                name='%(app_label)s_%(class)s_last_update_after_creation_date',
+                check=models.Q(last_update__gte=models.F('creation_date')),
+            )
+        ]
