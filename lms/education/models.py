@@ -87,6 +87,7 @@ class Material(models.Model):
 
 
 class TestAnswer(models.Model):
+    """Модель ответа на вопрос теста"""
     answer = models.PositiveSmallIntegerField(verbose_name='Выбор варианта ответа')
 
     def __str__(self):
@@ -109,8 +110,8 @@ class TestQuestion(models.Model):
         return f'{self.question}'
 
     class Meta:
-        verbose_name = 'тест'
-        verbose_name_plural = 'тесты'
+        verbose_name = 'вопрос на тест'
+        verbose_name_plural = 'вопросы на тесты'
         ordering = 'question',
 
 
