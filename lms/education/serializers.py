@@ -18,20 +18,21 @@ class MaterialRetrieveSerializer(serializers.ModelSerializer):
 
 
 class SectionListSerializer(serializers.ModelSerializer):
-    materials_count = serializers.IntegerField(source='material.all.count')
+    materials_count = serializers.IntegerField(source='material_section.all.count')
 
     class Meta:
         model = Section
-        fields = 'name', 'last_update', 'material', 'base_price', 'media',
+        fields = 'name', 'last_update', 'materials_count', 'base_price', 'media',
 
 
 class SectionRetrieveSerializer(serializers.ModelSerializer):
-    materials_count = serializers.IntegerField(source='material.all.count')
-    materials = MaterialListSerializer(source='material', many=True, read_only=True)
+    materials_count = serializers.IntegerField(source='material_section.all.count')
+    materials = MaterialListSerializer(source='material_section', many=True, read_only=True)
 
     class Meta:
         model = Section
-        fields = 'name', 'description', 'last_update', 'base_price', 'media',
+        fields = ('name', 'last_update', 'materials_count', 'base_price',
+                  'description', 'materials', 'media',)
 
 
 class TestAnswerSerializer(serializers.ModelSerializer):
@@ -45,7 +46,7 @@ class TestQuestionSerializer(serializers.ModelSerializer):
     choices = serializers.SerializerMethodField()
 
     def get_choices(self, obj):
-        ordered_queryset = TestAnswer.objects.filter(choices__id=obj.pk).order_by('?')
+        ordered_queryset = TestAnswer.objects.filter(testquestion_choices__pk=obj.pk).order_by('?')
         return TestAnswerSerializer(ordered_queryset, many=True, context=self.context).data
 
     class Meta:

@@ -31,10 +31,11 @@ class MaterialsRetrieveAPIView(generics.RetrieveAPIView):
 
 class StartTest(APIView):
 
-    def get(self, request, material_pk):
+    def get(self, request, pk):
         try:
-            test = Test.objects.get(material__pk=material_pk)
+            test = Test.objects.get(material__pk=pk)
         except Test.DoesNotExist:
             raise Http404
-        serializer = TestQuestionSerializer(test.question.all(),many=True)
-        return Response(serializer)
+        serializer = TestQuestionSerializer(test.question.all(), many=True)
+        print(serializer.data)
+        return Response(serializer.data)
