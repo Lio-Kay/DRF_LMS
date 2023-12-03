@@ -86,19 +86,31 @@ class Material(models.Model):
         ordering = 'name',
 
 
-class MaterialTest(models.Model):
-    """Модель теста для материала"""
-    name = models.CharField(max_length=100, verbose_name='Название')
-    text = models.TextField(**NULLABLE, verbose_name='Текст')
+class Test(models.Model):
+    """Модель теста"""
+    material = models.OneToOneField(**NULLABLE, to=Material, on_delete=models.CASCADE,
+                                    related_name='test_material')
+    question = models.ManyToManyField(to=MaterialQuestion, related_name='test_question')
 
     creation_date = models.DateTimeField(**NULLABLE, verbose_name='Дата создания')
     last_update = models.DateTimeField(**NULLABLE, verbose_name='Дата последнего обновления')
 
-    media = models.ManyToManyField(to=Media, related_name='test_media')
-    material = models.ForeignKey(to=Material, on_delete=models.CASCADE, related_name='material')
+    def __str__(self):
+        return f'{self.material}, {self.question}'
+
+    class Meta:
+        verbose_name = 'тест'
+        verbose_name_plural = 'тесты'
+        ordering = 'material',
+
+
+class TestQuestion(models.Model):
+    """Модель вопроса теста"""
+    question = models.TextField(verbose_name='Вопрос')
+    media = models.ManyToManyField(to=Media, related_name='testquestion_media')
 
     def __str__(self):
-        return f'{self.name}'
+        return f'{self.question}'
 
     class Meta:
         verbose_name = 'тест'
