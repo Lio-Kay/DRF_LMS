@@ -111,7 +111,7 @@ class TestQuestion(models.Model):
     class Meta:
         verbose_name = 'тест'
         verbose_name_plural = 'тесты'
-        ordering = 'name',
+        ordering = 'question',
 
 
 class Test(models.Model):
