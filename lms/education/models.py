@@ -3,7 +3,6 @@ from djmoney.models.fields import MoneyField
 
 from education.apps import EducationConfig
 
-
 app_name = EducationConfig.name
 
 NULLABLE = {'blank': True, 'null': True}
@@ -75,6 +74,12 @@ class Section(models.Model):
         verbose_name = 'раздел'
         verbose_name_plural = 'разделы'
         ordering = 'name',
+        constraints = [
+            models.CheckConstraint(
+                name='%(app_label)s_%(class)s_last_update_after_creation_date',
+                check=models.Q(last_update__gte=models.F('creation_date')),
+            )
+        ]
 
 
 class Material(models.Model):
@@ -118,7 +123,8 @@ class Material(models.Model):
 
 class TestAnswer(models.Model):
     """Модель ответа на вопрос теста"""
-    answer = models.PositiveSmallIntegerField(verbose_name='Выбор варианта ответа')
+    answer = models.PositiveSmallIntegerField(
+        verbose_name='Выбор варианта ответа')
 
     def __str__(self):
         return f'{self.answer}'
