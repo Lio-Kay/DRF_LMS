@@ -48,7 +48,7 @@ class Section(models.Model):
 
     base_price = MoneyField(max_digits=14, decimal_places=2, default_currency='RUB', verbose_name='Базовая цена')
 
-    media = models.ManyToManyField(to=Media, related_name='section_media')
+    media = models.ManyToManyField(**NULLABLE, to=Media, related_name='section_media')
 
     def __str__(self):
         return f'{self.name}, {self.status}, {self.creation_date}'
@@ -74,7 +74,7 @@ class Material(models.Model):
     creation_date = models.DateTimeField(**NULLABLE, verbose_name='Дата создания')
     last_update = models.DateTimeField(**NULLABLE, verbose_name='Дата последнего обновления')
 
-    media = models.ManyToManyField(to=Media, related_name='material_media')
+    media = models.ManyToManyField(**NULLABLE, to=Media, related_name='material_media')
     section = models.ForeignKey(**NULLABLE, to=Section, on_delete=models.SET_NULL, related_name='material_section')
 
     def __str__(self):
@@ -104,7 +104,7 @@ class TestQuestion(models.Model):
     question = models.TextField(verbose_name='Вопрос')
     answer = models.OneToOneField(to=TestAnswer, on_delete=models.CASCADE, related_name='testquestion_answer')
     choices = models.ManyToManyField(to=TestAnswer, related_name='testquestion_choices')
-    media = models.ManyToManyField(to=Media, related_name='testquestion_media')
+    media = models.ManyToManyField(**NULLABLE, to=Media, related_name='testquestion_media')
 
     def __str__(self):
         return f'{self.question}'
