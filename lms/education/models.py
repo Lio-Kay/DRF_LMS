@@ -119,6 +119,12 @@ class Material(models.Model):
         verbose_name = 'материал'
         verbose_name_plural = 'материалы'
         ordering = 'name',
+        constraints = [
+            models.CheckConstraint(
+                name='%(app_label)s_%(class)s_last_update_after_creation_date',
+                check=models.Q(last_update__gte=models.F('creation_date')),
+            )
+        ]
 
 
 class TestAnswer(models.Model):
