@@ -36,7 +36,23 @@ class Media(models.Model):
                                      verbose_name='Внешнее аудио')
 
     def __str__(self):
-        return f'{self.name}'
+        fields = [self.name]
+        if self.creation_date:
+            fields.append(str(self.creation_date))
+        if self.local_image:
+            fields.append(str(self.local_image))
+        if self.external_image:
+            fields.append(self.external_image)
+        if self.local_video:
+            fields.append(str(self.local_video))
+        if self.external_video:
+            fields.append(self.external_video)
+        if self.local_audio:
+            fields.append(str(self.local_audio))
+        if self.external_audio:
+            fields.append(self.external_audio)
+
+        return ', '.join(fields)
 
     class Meta:
         verbose_name = 'медиа'
