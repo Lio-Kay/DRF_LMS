@@ -7,9 +7,11 @@ from education.models import (Media, Section, Material, TestAnswer,
 @admin.register(Media)
 class MediaAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'creation_date', 'local_image',
-                    'external_image', 'local_video', 'external_video',)
+                    'external_image', 'local_video', 'external_video',
+                    'local_audio', 'external_audio',)
     list_display_links = ('id', 'creation_date', 'local_image',
-                          'external_image', 'local_video', 'external_video')
+                          'external_image', 'local_video', 'external_video',
+                          'local_audio', 'external_audio',)
     search_fields = 'name', 'creation_date',
     list_editable = 'name',
 
