@@ -1,7 +1,9 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 from djmoney.models.fields import MoneyField
 
 from education.apps import EducationConfig
+
 
 app_name = EducationConfig.name
 
@@ -122,9 +124,17 @@ class Material(models.Model):
         constraints = [
             models.CheckConstraint(
                 name='%(app_label)s_%(class)s_last_update_after_creation_date',
-                check=models.Q(last_update__gte=models.F('creation_date')),
+                check=models.Q(last_update__gte=models.F('creation_date'))
             )
         ]
+
+    def clean(self):
+        if self.section.status == 'ARCHIVED' and self.status != 'ARCHIVED':
+            raise ValidationError('Материал должен иметь тот же статус,'
+                                  'что и родительский раздел')
+        elif self.section.status == 'CLOSED' and self.status != 'CLOSED':
+            raise ValidationError('Материал должен иметь тот же статус,'
+                                  'что и родительский раздел')
 
 
 class TestAnswer(models.Model):
