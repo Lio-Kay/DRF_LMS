@@ -37,5 +37,4 @@ class StartTest(APIView):
         except Test.DoesNotExist:
             raise Http404
         serializer = TestQuestionSerializer(test.question.all(), many=True)
-        print(serializer.data)
         return Response(serializer.data)
