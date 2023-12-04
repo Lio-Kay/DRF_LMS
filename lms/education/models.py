@@ -29,6 +29,11 @@ class Media(models.Model):
                                    verbose_name='Локальное видео')
     external_video = models.URLField(**NULLABLE,
                                      verbose_name='Внешнее видео')
+    local_audio = models.FileField(**NULLABLE,
+                                   upload_to='education/media/audios/%Y/%m%d/',
+                                   verbose_name='Локальное аудио')
+    external_audio = models.URLField(**NULLABLE,
+                                     verbose_name='Внешнее аудио')
 
     def __str__(self):
         return f'{self.name}'
