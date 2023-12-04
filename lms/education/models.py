@@ -44,6 +44,7 @@ class Media(models.Model):
         ordering = 'name',
 
     def clean(self):
+        # Проверка на обязательный выбор только одного медиа файла
         image_fields = [self.local_image, self.external_image]
         video_fields = [self.local_video, self.external_video]
         audio_fields = [self.local_audio, self.external_audio]
@@ -58,6 +59,7 @@ class Media(models.Model):
 
     def save(self, force_insert=False, force_update=False,
              using=None,update_fields=None, *args, **kwargs):
+        # Автозапись даты создания
         if not self.creation_date:
             self.creation_date = timezone.now()
         super().save(force_insert, force_update, using, update_fields,
@@ -111,8 +113,10 @@ class Section(models.Model):
 
     def save(self, force_insert=False, force_update=False,
              using=None,update_fields=None, *args, **kwargs):
+        # Автозапись даты создания
         if not self.creation_date:
             self.creation_date = timezone.now()
+        # Автозапись даты обновления
         if not self.last_update:
             self.last_update = timezone.now()
         super().save(force_insert, force_update, using, update_fields,
@@ -164,6 +168,7 @@ class Material(models.Model):
         ]
 
     def clean(self):
+        # Проверка на соответствие статуса материала статусу раздела
         if self.section.status == 'ARCHIVED' and self.status != 'ARCHIVED':
             raise ValidationError('Материал должен иметь тот же статус,'
                                   'что и родительский раздел')
@@ -173,8 +178,10 @@ class Material(models.Model):
 
     def save(self, force_insert=False, force_update=False,
              using=None,update_fields=None, *args, **kwargs):
+        # Автозапись даты создания
         if not self.creation_date:
             self.creation_date = timezone.now()
+        # Автозапись даты обновления
         if not self.last_update:
             self.last_update = timezone.now()
         super().save(force_insert, force_update, using, update_fields,
@@ -246,8 +253,10 @@ class Test(models.Model):
 
     def save(self, force_insert=False, force_update=False,
              using=None,update_fields=None, *args, **kwargs):
+        # Автозапись даты создания
         if not self.creation_date:
             self.creation_date = timezone.now()
+        # Автозапись даты обновления
         if not self.last_update:
             self.last_update = timezone.now()
         super().save(force_insert, force_update, using, update_fields,
