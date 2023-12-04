@@ -43,6 +43,19 @@ class Media(models.Model):
         verbose_name_plural = 'медиа'
         ordering = 'name',
 
+    def clean(self):
+        image_fields = [self.local_image, self.external_image]
+        video_fields = [self.local_video, self.external_video]
+        audio_fields = [self.local_audio, self.external_audio]
+
+        if not any(image_fields) and not any(video_fields) and not any(
+                audio_fields):
+            raise ValidationError('Медиа файл должен быть указан')
+        if sum(bool(field) for field in image_fields) + sum(
+                bool(field) for field in video_fields) + sum(
+                bool(field) for field in audio_fields) > 1:
+            raise ValidationError('Только один медиа файл может быть выбран')
+
     def save(self, force_insert=False, force_update=False,
              using=None,update_fields=None, *args, **kwargs):
         if not self.creation_date:
