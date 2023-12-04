@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.utils import timezone
 from djmoney.models.fields import MoneyField
 
 from education.apps import EducationConfig
@@ -36,6 +37,13 @@ class Media(models.Model):
         verbose_name = 'медиа'
         verbose_name_plural = 'медиа'
         ordering = 'name',
+
+    def save(self, force_insert=False, force_update=False,
+             using=None,update_fields=None, *args, **kwargs):
+        if not self.creation_date:
+            self.creation_date = timezone.now()
+        super().save(force_insert, force_update, using, update_fields,
+                     *args, **kwargs)
 
 
 class Section(models.Model):
@@ -82,6 +90,15 @@ class Section(models.Model):
                 check=models.Q(last_update__gte=models.F('creation_date')),
             )
         ]
+
+    def save(self, force_insert=False, force_update=False,
+             using=None,update_fields=None, *args, **kwargs):
+        if not self.creation_date:
+            self.creation_date = timezone.now()
+        if not self.last_update:
+            self.last_update = timezone.now()
+        super().save(force_insert, force_update, using, update_fields,
+                     *args, **kwargs)
 
 
 class Material(models.Model):
@@ -135,6 +152,15 @@ class Material(models.Model):
         elif self.section.status == 'CLOSED' and self.status != 'CLOSED':
             raise ValidationError('Материал должен иметь тот же статус,'
                                   'что и родительский раздел')
+
+    def save(self, force_insert=False, force_update=False,
+             using=None,update_fields=None, *args, **kwargs):
+        if not self.creation_date:
+            self.creation_date = timezone.now()
+        if not self.last_update:
+            self.last_update = timezone.now()
+        super().save(force_insert, force_update, using, update_fields,
+                     *args, **kwargs)
 
 
 class TestAnswer(models.Model):
@@ -199,3 +225,12 @@ class Test(models.Model):
                 check=models.Q(last_update__gte=models.F('creation_date')),
             )
         ]
+
+    def save(self, force_insert=False, force_update=False,
+             using=None,update_fields=None, *args, **kwargs):
+        if not self.creation_date:
+            self.creation_date = timezone.now()
+        if not self.last_update:
+            self.last_update = timezone.now()
+        super().save(force_insert, force_update, using, update_fields,
+                     *args, **kwargs)
