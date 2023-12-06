@@ -1,5 +1,4 @@
 from django.test import TestCase
-from django.core.files.uploadedfile import SimpleUploadedFile
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -7,7 +6,6 @@ User = get_user_model()
 
 class UserModelCreateTestCase(TestCase):
     def setUp(self):
-        avatar_file = SimpleUploadedFile('avatar.jpg', b'fake content')
         self.user = User.objects.create_user(
             email='test@example.com',
             password='testpassword',

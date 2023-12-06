@@ -74,7 +74,7 @@ class Media(models.Model):
             raise ValidationError('Только один медиа файл может быть выбран')
 
     def save(self, force_insert=False, force_update=False,
-             using=None,update_fields=None, *args, **kwargs):
+             using=None, update_fields=None, *args, **kwargs):
         # Автозапись даты создания
         if not self.creation_date:
             self.creation_date = timezone.now()
@@ -128,7 +128,7 @@ class Section(models.Model):
         ]
 
     def save(self, force_insert=False, force_update=False,
-             using=None,update_fields=None, *args, **kwargs):
+             using=None, update_fields=None, *args, **kwargs):
         # Автозапись даты создания
         if not self.creation_date:
             self.creation_date = timezone.now()
@@ -159,7 +159,8 @@ class Material(models.Model):
     creation_date = models.DateTimeField(**NULLABLE,
                                          verbose_name='Дата создания')
     last_update = models.DateTimeField(**NULLABLE,
-                                       verbose_name='Дата последнего обновления')
+                                       verbose_name='Дата последнего '
+                                                    'обновления')
 
     media = models.ManyToManyField(**NULLABLE,
                                    to=Media,
@@ -193,7 +194,7 @@ class Material(models.Model):
                                   'что и родительский раздел')
 
     def save(self, force_insert=False, force_update=False,
-             using=None,update_fields=None, *args, **kwargs):
+             using=None, update_fields=None, *args, **kwargs):
         # Автозапись даты создания
         if not self.creation_date:
             self.creation_date = timezone.now()
@@ -268,7 +269,7 @@ class Test(models.Model):
         ]
 
     def save(self, force_insert=False, force_update=False,
-             using=None,update_fields=None, *args, **kwargs):
+             using=None, update_fields=None, *args, **kwargs):
         # Автозапись даты создания
         if not self.creation_date:
             self.creation_date = timezone.now()

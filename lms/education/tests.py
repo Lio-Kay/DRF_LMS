@@ -6,7 +6,7 @@ from django.db.utils import IntegrityError
 from datetime import timedelta
 
 from education.models import (Media, Section, Material, TestAnswer,
-                              TestQuestion, Test)
+                              TestQuestion)
 
 
 class MediaModelTests(TestCase):
@@ -224,4 +224,3 @@ class TestQuestionModelTests(TestCase):
         self.assertEqual(self.testquestion.question, 'Test_Question')
         self.assertEqual(self.testquestion.answer, self.answer1)
         self.assertIn(self.media, self.testquestion.media.all())
-
