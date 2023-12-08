@@ -60,8 +60,8 @@ class SectionListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Section
-        fields = ('name', 'last_update', 'materials_count', 'base_price',
-                  'media',)
+        fields = ('name', 'status', 'creation_date', 'last_update',
+                  'materials_count', 'base_price', 'media',)
 
 
 class SectionRetrieveSerializer(serializers.ModelSerializer):
