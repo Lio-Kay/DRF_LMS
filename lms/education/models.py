@@ -235,7 +235,7 @@ class TestQuestion(models.Model):
                                    related_name='testquestion_media')
 
     def __str__(self):
-        return f'Question: {self.question}, Answer: {self.answer}'
+        return f'Question: {self.question}, {self.answer}'
 
     class Meta:
         verbose_name = 'вопрос на тест'
