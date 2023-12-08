@@ -132,3 +132,36 @@ class MaterialRetrieveSerializerTest(TestCase):
         media_links_serializer = MediaLinkSerializer(instance=self.material.media.all(), many=True)
         expected_media_links = media_links_serializer.data
         self.assertEqual(serializer.data['media_links'], expected_media_links)
+
+
+class SectionListSerializerTest(TestCase):
+    def setUp(self):
+        self.section = Section.objects.create(name='Section_1', base_price=10)
+        self.media = Media.objects.create(name='Media_1')
+        self.material = Material.objects.create(name='Material_1', section=self.section)
+        self.section.media.add(self.media)
+
+    def tearDown(self):
+        self.section.delete()
+        self.media.delete()
+        self.material.delete()
+
+    def test_get_media_names(self):
+        serializer = SectionListSerializer(instance=self.section)
+        expected_media_names = ['Media_1']
+        self.assertEqual(list(serializer.data['media_names']), expected_media_names)
+
+    def test_meta_fields(self):
+        serializer = SectionListSerializer()
+        expected_fields = ('name', 'status', 'creation_date', 'last_update',
+                           'materials_count', 'base_price',
+                           'media_names', 'media_links',)
+        self.assertEqual(serializer.Meta.model, Section)
+        self.assertEqual(serializer.Meta.fields, expected_fields)
+
+    def test_media_links_serializer(self):
+        serializer = SectionListSerializer(instance=self.section)
+        media_links_serializer = MediaLinkSerializer(
+            instance=self.section.media.all(), many=True)
+        expected_media_links = media_links_serializer.data
+        self.assertEqual(serializer.data['media_links'], expected_media_links)
