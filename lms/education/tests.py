@@ -115,9 +115,10 @@ class SectionModelTests(TestCase):
         section = Section(
             name='Test_Section',
             status='OPEN',
-            creation_date='2023-01-01T00:00:00Z'
+            creation_date='2023-01-01T00:00:00Z',
+            base_price=100
         )
-        expected_str = 'Test_Section, OPEN, 2023-01-01T00:00:00Z'
+        expected_str = 'Name: Test_Section, Status: OPEN, Created: 2023-01-01T00:00:00Z, Base price: 100,00\xa0₽'
         self.assertEqual(str(section), expected_str)
 
     def test_status_choices_auto_set(self):
