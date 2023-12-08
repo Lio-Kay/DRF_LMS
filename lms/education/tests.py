@@ -272,6 +272,15 @@ class TestQuestionModelTests(TestCase):
         self.assertEqual(self.testquestion.answer, self.answer1)
         self.assertIn(self.media, self.testquestion.media.all())
 
+    def test_str_representation(self):
+        test_answer = TestAnswer.objects.create(answer='Test_Answer')
+        test_question = TestQuestion.objects.create(
+            question='Test_Question',
+            answer=test_answer
+        )
+        expected_str = 'Question: Test_Question, Answer: Test_Answer'
+        self.assertEqual(str(test_question), expected_str)
+
 
 class TestModelTests(TestCase):
     def setUp(self):
