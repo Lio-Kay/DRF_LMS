@@ -35,10 +35,21 @@ class MaterialListSerializer(serializers.ModelSerializer):
 
 
 class MaterialRetrieveSerializer(serializers.ModelSerializer):
+    section = serializers.SerializerMethodField('get_section')
+    media_name = serializers.SerializerMethodField('get_media_name')
+    media_link = MediaLinkSerializer(source='media', many=True)
+
+    def get_section(self, obj):
+        return obj.section.name
+
+    def get_media_name(self, obj):
+        media_name = obj.media.values_list('name', flat=True)
+        return media_name[0]
 
     class Meta:
         model = Material
-        fields = 'name', 'section', 'text', 'last_update', 'media',
+        fields = ('name', 'section', 'text', 'last_update', 'media_name',
+                  'media_link',)
 
 
 class SectionListSerializer(serializers.ModelSerializer):
