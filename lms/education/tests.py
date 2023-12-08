@@ -208,14 +208,15 @@ class MaterialModelTests(TestCase):
         with self.assertRaises(ValidationError):
             material.clean()
 
-        section.status = 'ARCHIVED'
-        section.save()
-        material.status = 'OPEN'
+        section = Section.objects.create(
+            name='Test_Section',
+            status='CLOSED')
+        material = Material(
+            name='Test_Material',
+            status='OPEM',
+            section=section)
         with self.assertRaises(ValidationError):
             material.clean()
-
-        material.status = 'ARCHIVED'
-        material.clean()
 
     def test_save_method(self):
         material = Material.objects.create(name='Test_Material')
