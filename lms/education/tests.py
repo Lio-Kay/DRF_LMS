@@ -175,6 +175,15 @@ class MaterialModelTests(TestCase):
         self.assertEqual(self.material.section, self.section)
         self.assertIn(self.media, self.material.media.all())
 
+    def test_str_representation(self):
+        material = Material(
+            name='Test_Material',
+            status='OPEN',
+            creation_date='2023-01-01T00:00:00Z'
+        )
+        expected_str = 'Name: Test_Material, Status: OPEN, Created: 2023-01-01T00:00:00Z'
+        self.assertEqual(str(material), expected_str)
+
     def test_status_choices_auto_set(self):
         material = Section.objects.create(name='Test_Material')
         self.assertEqual(material.status, 'CLOSED')
@@ -228,6 +237,13 @@ class TestAnswerModelTests(TestCase):
         answer_count = TestAnswer.objects.count()
         self.assertEqual(answer_count, 1)
         self.assertEqual(self.answer.answer, 1)
+
+    def test_str_representation(self):
+        answer = TestAnswer(
+            answer='Test_Answer'
+        )
+        expected_str = 'Answer: Test_Answer'
+        self.assertEqual(str(answer), expected_str)
 
 
 class TestQuestionModelTests(TestCase):
@@ -288,6 +304,19 @@ class TestModelTests(TestCase):
         self.assertEqual(self.test.question.count(), 1)
         self.assertEqual(self.test.question.first().question, 'Question')
         self.assertEqual(self.test.question.first().answer.answer, 'Answer1')
+
+    def test_str_representation(self):
+        test_answer = TestAnswer.objects.create(answer='Answer1')
+        test_question = TestQuestion.objects.create(
+            question='Test_Question',
+            answer=test_answer)
+        test_question.choices.add(test_answer)
+        test = Test.objects.create(
+            creation_date='2023-01-01T00:00:00Z',
+        )
+        test.question.add(test_question)
+        expected_str = 'Question: Test_Question, Created: 2023-01-01T00:00:00Z'
+        self.assertEqual(str(test), expected_str)
 
     def test_last_update_after_creation_date(self):
         with self.assertRaises(IntegrityError):
