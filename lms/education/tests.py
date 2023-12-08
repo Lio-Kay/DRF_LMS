@@ -10,6 +10,9 @@ from education.models import (Media, Section, Material, TestAnswer,
 
 
 class MediaModelTests(TestCase):
+
+    maxDiff = None
+
     def setUp(self):
         self.media = Media.objects.create(
             name='Test_Media',
@@ -24,6 +27,23 @@ class MediaModelTests(TestCase):
         self.assertEqual(media_count, 1)
         self.assertEqual(self.media.name, 'Test_Media')
         self.assertEqual(self.media.external_image, 'https://placehold.co/600x400/EEE/31343C')
+
+    def test_str_representation(self):
+        media = Media(
+            name='Test_Media',
+            creation_date='2023-01-01T00:00:00Z',
+            local_image='path/to/image.jpg',
+            external_image='https://example.com/image.jpg',
+            local_video='path/to/video.mp4',
+            external_video='https://example.com/video.mp4',
+            local_audio='path/to/audio.mp3',
+            external_audio='https://example.com/audio.mp3'
+        )
+        expected_str = ('Test_Media, 2023-01-01T00:00:00Z, '
+                        'path/to/image.jpg, https://example.com/image.jpg, '
+                        'path/to/video.mp4, https://example.com/video.mp4, '
+                        'path/to/audio.mp3, https://example.com/audio.mp3')
+        self.assertEqual(str(media), expected_str)
 
     def test_one_media_selected(self):
         media = Media(name='Test_Media')
