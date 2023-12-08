@@ -31,7 +31,9 @@ class MaterialListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Material
-        fields = 'name', 'section', 'media_name', 'media_link',
+        fields = ('name', 'section', 'status',
+                  'creation_date', 'last_update',
+                  'media_name', 'media_link',)
 
 
 class MaterialRetrieveSerializer(serializers.ModelSerializer):
@@ -48,8 +50,9 @@ class MaterialRetrieveSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Material
-        fields = ('name', 'section', 'text', 'last_update', 'media_name',
-                  'media_link',)
+        fields = ('name', 'section', 'status', 'text',
+                  'creation_date', 'last_update',
+                  'media_name', 'media_link',)
 
 
 class SectionListSerializer(serializers.ModelSerializer):
