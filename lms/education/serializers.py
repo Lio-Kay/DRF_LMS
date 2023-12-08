@@ -72,14 +72,23 @@ class SectionListSerializer(serializers.ModelSerializer):
 
 
 class SectionRetrieveSerializer(serializers.ModelSerializer):
-    materials_count = serializers.IntegerField(source='material_section.all.count')
-    materials = MaterialListSerializer(source='material_section',
-                                       many=True, read_only=True)
+    materials = serializers.SerializerMethodField('get_materials_names')
+    media_names = serializers.SerializerMethodField('get_media_names')
+    media_links = MediaLinkSerializer(source='media', many=True)
+
+    def get_materials_names(self, obj):
+        materials_names = obj.material_section.values_list('name', flat=True)
+        return materials_names
+
+    def get_media_names(self, obj):
+        media_names = obj.media.values_list('name', flat=True)
+        return media_names
 
     class Meta:
         model = Section
-        fields = ('name', 'last_update', 'materials_count', 'base_price',
-                  'description', 'materials', 'media',)
+        fields = ('name', 'status', 'description',
+                  'creation_date', 'last_update', 'base_price',
+                  'materials', 'media_names', 'media_links',)
 
 
 class TestAnswerSerializer(serializers.ModelSerializer):
