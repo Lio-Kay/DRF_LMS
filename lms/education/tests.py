@@ -111,6 +111,15 @@ class SectionModelTests(TestCase):
         self.assertEqual(self.section.base_price.amount, 100)
         self.assertIn(self.media, self.section.media.all())
 
+    def test_str_representation(self):
+        section = Section(
+            name='Test_Section',
+            status='OPEN',
+            creation_date='2023-01-01T00:00:00Z'
+        )
+        expected_str = 'Test_Section, OPEN, 2023-01-01T00:00:00Z'
+        self.assertEqual(str(section), expected_str)
+
     def test_status_choices_auto_set(self):
         section = Section.objects.create(name='Test_Section')
         self.assertEqual(section.status, 'CLOSED')
