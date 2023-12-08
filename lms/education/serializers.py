@@ -1,6 +1,20 @@
 from rest_framework import serializers
 
-from education.models import Section, Material, TestAnswer, TestQuestion
+from education.models import (Media, Section, Material, TestAnswer,
+                              TestQuestion)
+
+
+class MediaLinkSerializer(serializers.ModelSerializer):
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        return {key: value for key, value in data.items() if value is not None}
+
+    class Meta:
+        model = Media
+        fields = ('local_image', 'external_image',
+                  'local_video', 'external_video',
+                  'local_audio', 'external_audio',)
 
 
 class MaterialListSerializer(serializers.ModelSerializer):
