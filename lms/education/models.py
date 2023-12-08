@@ -258,7 +258,9 @@ class Test(models.Model):
                                        verbose_name='Дата последнего обновления')
 
     def __str__(self):
-        return f'Question: {self.question}, Created: {self.creation_date}'
+        question_list = ', '.join(
+            [str(question.question) for question in self.question.all()])
+        return f'Question: {question_list}, Created: {self.creation_date}'
 
     class Meta:
         verbose_name = 'тест'
