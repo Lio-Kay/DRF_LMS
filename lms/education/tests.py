@@ -6,7 +6,7 @@ from django.db.utils import IntegrityError
 from datetime import timedelta
 
 from education.models import (Media, Section, Material, TestAnswer,
-                              TestQuestion)
+                              TestQuestion, Test)
 
 
 class MediaModelTests(TestCase):
@@ -224,3 +224,53 @@ class TestQuestionModelTests(TestCase):
         self.assertEqual(self.testquestion.question, 'Test_Question')
         self.assertEqual(self.testquestion.answer, self.answer1)
         self.assertIn(self.media, self.testquestion.media.all())
+
+
+class TestModelTests(TestCase):
+    def setUp(self):
+        self.material = Material.objects.create(name='Test_Material')
+        self.test_answer1 = TestAnswer.objects.create(answer=1)
+        self.test_answer2 = TestAnswer.objects.create(answer=2)
+        self.test_question = TestQuestion.objects.create(
+            question='Question',
+            answer=self.test_answer1)
+        self.test_question.choices.add(self.test_answer1, self.test_answer2)
+        self.test = Test.objects.create(
+            material=self.material,
+            creation_date=timezone.now(),
+            last_update=timezone.now()
+        )
+        self.test.question.add(self.test_question)
+
+    def tearDown(self):
+        self.material.delete()
+        self.test_answer1.delete()
+        self.test_answer2.delete()
+        self.test_question.delete()
+        self.test.delete()
+
+    def test_create_test(self):
+        tests_count = Test.objects.count()
+        self.assertEqual(tests_count, 1)
+        self.assertEqual(self.test.material, self.material)
+        self.assertEqual(self.test.creation_date.date(), timezone.now().date())
+        self.assertEqual(self.test.last_update.date(), timezone.now().date())
+        self.assertEqual(self.test.question.count(), 1)
+        self.assertEqual(self.test.question.first().question, 'Question')
+        self.assertEqual(self.test.question.first().answer.answer, 1)
+
+    def test_last_update_after_creation_date(self):
+        with self.assertRaises(IntegrityError):
+            with transaction.atomic():
+                Test.objects.create(
+                    creation_date=timezone.now(),
+                    last_update=timezone.now() - timedelta(days=1)
+                )
+
+    def test_save_method(self):
+        test = Test.objects.create()
+        self.assertIsNotNone(test.creation_date)
+        self.assertEqual(test.creation_date.date(), timezone.now().date())
+        test = Test.objects.create()
+        self.assertIsNotNone(test.last_update)
+        self.assertEqual(test.last_update.date(), timezone.now().date())
