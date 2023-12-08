@@ -114,7 +114,8 @@ class Section(models.Model):
                                    related_name='section_media')
 
     def __str__(self):
-        return f'{self.name}, {self.status}, {self.creation_date}'
+        return (f'Name: {self.name}, Status: {self.status}, '
+                f'Created: {self.creation_date}, Base price: {self.base_price}')
 
     class Meta:
         verbose_name = 'раздел'
@@ -171,7 +172,8 @@ class Material(models.Model):
                                 related_name='material_section')
 
     def __str__(self):
-        return f'{self.name}, {self.status}, {self.creation_date}'
+        return (f'Name: {self.name}, Status: {self.status}, '
+                f'Created: {self.creation_date}')
 
     class Meta:
         verbose_name = 'материал'
@@ -212,7 +214,7 @@ class TestAnswer(models.Model):
         verbose_name='Выбор варианта ответа')
 
     def __str__(self):
-        return f'{self.answer}'
+        return f'Answer: {self.answer}'
 
     class Meta:
         verbose_name = 'ответ на тест'
@@ -233,7 +235,7 @@ class TestQuestion(models.Model):
                                    related_name='testquestion_media')
 
     def __str__(self):
-        return f'{self.question}'
+        return f'Question: {self.question}, Answer: {self.answer}'
 
     class Meta:
         verbose_name = 'вопрос на тест'
@@ -256,7 +258,7 @@ class Test(models.Model):
                                        verbose_name='Дата последнего обновления')
 
     def __str__(self):
-        return f'{self.material}, {self.question}'
+        return f'Question: {self.question}, Created: {self.creation_date}'
 
     class Meta:
         verbose_name = 'тест'
