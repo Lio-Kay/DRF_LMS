@@ -109,7 +109,7 @@ class Section(models.Model):
                             default_currency='RUB',
                             verbose_name='Базовая цена')
 
-    media = models.ManyToManyField(**NULLABLE,
+    media = models.ManyToManyField(blank=True,
                                    to=Media,
                                    related_name='section_media')
 
@@ -162,7 +162,7 @@ class Material(models.Model):
                                        verbose_name='Дата последнего '
                                                     'обновления')
 
-    media = models.ManyToManyField(**NULLABLE,
+    media = models.ManyToManyField(blank=True,
                                    to=Media,
                                    related_name='material_media')
     section = models.ForeignKey(**NULLABLE,
@@ -207,7 +207,8 @@ class Material(models.Model):
 
 class TestAnswer(models.Model):
     """Модель ответа на вопрос теста"""
-    answer = models.PositiveSmallIntegerField(
+    answer = models.CharField(
+        max_length=1_000,
         verbose_name='Выбор варианта ответа')
 
     def __str__(self):
@@ -227,7 +228,7 @@ class TestQuestion(models.Model):
                                   related_name='testquestion_answer')
     choices = models.ManyToManyField(to=TestAnswer,
                                      related_name='testquestion_choices')
-    media = models.ManyToManyField(**NULLABLE,
+    media = models.ManyToManyField(blank=True,
                                    to=Media,
                                    related_name='testquestion_media')
 

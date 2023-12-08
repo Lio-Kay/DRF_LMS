@@ -229,8 +229,8 @@ class TestQuestionModelTests(TestCase):
 class TestModelTests(TestCase):
     def setUp(self):
         self.material = Material.objects.create(name='Test_Material')
-        self.test_answer1 = TestAnswer.objects.create(answer=1)
-        self.test_answer2 = TestAnswer.objects.create(answer=2)
+        self.test_answer1 = TestAnswer.objects.create(answer='Answer1')
+        self.test_answer2 = TestAnswer.objects.create(answer='Answer2')
         self.test_question = TestQuestion.objects.create(
             question='Question',
             answer=self.test_answer1)
@@ -257,7 +257,7 @@ class TestModelTests(TestCase):
         self.assertEqual(self.test.last_update.date(), timezone.now().date())
         self.assertEqual(self.test.question.count(), 1)
         self.assertEqual(self.test.question.first().question, 'Question')
-        self.assertEqual(self.test.question.first().answer.answer, 1)
+        self.assertEqual(self.test.question.first().answer.answer, 'Answer1')
 
     def test_last_update_after_creation_date(self):
         with self.assertRaises(IntegrityError):
