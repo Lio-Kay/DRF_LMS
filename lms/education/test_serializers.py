@@ -245,3 +245,20 @@ class SectionRetrieveSerializerTest(TestCase):
             instance=self.section.media.all(), many=True)
         expected_media_links = media_links_serializer.data
         self.assertEqual(serializer.data['media_links'], expected_media_links)
+
+
+class TestAnswerSerializerTest(TestCase):
+    def setUp(self):
+        self.test_answer = TestAnswer.objects.create(
+            pk=1,
+            answer='Answer'
+        )
+
+    def tearDown(self):
+        self.test_answer.delete()
+
+    def test_meta_fields(self):
+        serializer = TestAnswerSerializer()
+        expected_fields = ('pk', 'answer',)
+        self.assertEqual(serializer.Meta.model, TestAnswer)
+        self.assertEqual(serializer.Meta.fields, expected_fields)
