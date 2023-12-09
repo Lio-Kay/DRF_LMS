@@ -201,8 +201,12 @@ class SectionRetrieveSerializerTest(TestCase):
             status='OPEN',
             text='Lorem ipsum dolor sit amet.'
         )
-        self.media1 = Media.objects.create(name='Media_1')
-        self.media2 = Media.objects.create(name='Media_2')
+        self.media1 = Media.objects.create(
+            name='Media_1',
+            local_image='path/to/image2.jpg')
+        self.media2 = Media.objects.create(
+            name='Media_2',
+            local_image='path/to/image2.jpg')
         self.section.media.add(self.media1, self.media2)
 
     def tearDown(self):
@@ -217,18 +221,18 @@ class SectionRetrieveSerializerTest(TestCase):
         materials_names = serializer.data['materials']
         expected_materials_names = ['Material_1', 'Material_2']
         self.assertEqual(list(materials_names), expected_materials_names)
-    #
-    # def test_get_media_names(self):
-    #     serializer = SectionRetrieveSerializer(instance=self.section)
-    #     media_names = serializer.data['media_names']
-    #     expected_media_names = ['Media_1', 'Media_2']
-    #     self.assertEqual(list(media_names), expected_media_names)
-    #
-    # def test_media_links_serializer(self):
-    #     serializer = SectionRetrieveSerializer(instance=self.section)
-    #     media_links = serializer.data['media_links']
-    #     self.assertEqual(len(media_links), 2)
-    #     media_links_serializer = MediaLinkSerializer(
-    #         instance=self.section.media.all(), many=True)
-    #     expected_media_links = media_links_serializer.data
-    #     self.assertEqual(serializer.data['media_links'], expected_media_links)
+
+    def test_get_media_names(self):
+        serializer = SectionRetrieveSerializer(instance=self.section)
+        media_names = serializer.data['media_names']
+        expected_media_names = ['Media_1', 'Media_2']
+        self.assertEqual(list(media_names), expected_media_names)
+
+    def test_media_links_serializer(self):
+        serializer = SectionRetrieveSerializer(instance=self.section)
+        media_links = serializer.data['media_links']
+        self.assertEqual(len(media_links), 2)
+        media_links_serializer = MediaLinkSerializer(
+            instance=self.section.media.all(), many=True)
+        expected_media_links = media_links_serializer.data
+        self.assertEqual(serializer.data['media_links'], expected_media_links)
