@@ -146,6 +146,9 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny',
     ),
 }
+
+# Dj-rest-auth
+# https://dj-rest-auth.readthedocs.io/en/latest/configuration.html
 REST_AUTH = {
     'LOGIN_SERIALIZER': 'dj_rest_auth.serializers.LoginSerializer',
     'TOKEN_SERIALIZER': 'dj_rest_auth.serializers.TokenSerializer',
@@ -184,6 +187,24 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
+# Allauth
+# https://docs.allauth.org/en/latest/account/configuration.html
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_EMAIL_CONFIRMATION_COOLDOWN = 60 * 3
+ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 10
+ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 60 * 10
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
+LOGIN_REDIRECT_URL = 'accounts'
+ACCOUNT_LOGOUT_REDIRECT_URL = 'accounts:account_login'
+ACCOUNT_USERNAME_BLACKLIST = []
+ACCOUNT_USERNAME_REQUIRED = False
+
+# Djangorestframework-simplejwt
+# https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
