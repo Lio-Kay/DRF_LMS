@@ -27,7 +27,7 @@ class MaterialListSerializer(serializers.ModelSerializer):
 
     def get_media_names(self, obj):
         media_names = obj.media.values_list('name', flat=True)
-        return media_names[0]
+        return media_names
 
     class Meta:
         model = Material
@@ -46,7 +46,7 @@ class MaterialRetrieveSerializer(serializers.ModelSerializer):
 
     def get_media_names(self, obj):
         media_names = obj.media.values_list('name', flat=True)
-        return media_names[0]
+        return media_names
 
     class Meta:
         model = Material
