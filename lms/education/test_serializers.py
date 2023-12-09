@@ -228,6 +228,15 @@ class SectionRetrieveSerializerTest(TestCase):
         expected_media_names = ['Media_1', 'Media_2']
         self.assertEqual(list(media_names), expected_media_names)
 
+    def test_meta_fields(self):
+        serializer = SectionRetrieveSerializer()
+        expected_fields = ('name', 'status', 'description',
+                           'creation_date', 'last_update',
+                           'base_price', 'materials',
+                           'media_names', 'media_links',)
+        self.assertEqual(serializer.Meta.model, Section)
+        self.assertEqual(serializer.Meta.fields, expected_fields)
+
     def test_media_links_serializer(self):
         serializer = SectionRetrieveSerializer(instance=self.section)
         media_links = serializer.data['media_links']
