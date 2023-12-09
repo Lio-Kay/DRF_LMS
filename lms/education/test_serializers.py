@@ -49,8 +49,11 @@ class MediaLinkSerializerTest(TestCase):
 
 class MaterialListSerializerTest(TestCase):
     def setUp(self):
-        self.section = Section.objects.create(name='Section_1')
-        self.media = Media.objects.create(name='Media_1')
+        self.section = Section.objects.create(
+            name='Section_1')
+        self.media = Media.objects.create(
+            name='Media_1',
+            local_image='path/to/image.jpg')
         self.material = Material.objects.create(
             name='Material_1',
             section=self.section,
@@ -85,15 +88,19 @@ class MaterialListSerializerTest(TestCase):
 
     def test_media_links_serializer(self):
         serializer = MaterialListSerializer(instance=self.material)
-        media_links_serializer = MediaLinkSerializer(instance=self.material.media.all(), many=True)
+        media_links_serializer = MediaLinkSerializer(
+            instance=self.material.media.all(), many=True)
         expected_media_links = media_links_serializer.data
         self.assertEqual(serializer.data['media_links'], expected_media_links)
 
 
 class MaterialRetrieveSerializerTest(TestCase):
     def setUp(self):
-        self.section = Section.objects.create(name='Section_1')
-        self.media = Media.objects.create(name='Media_1')
+        self.section = Section.objects.create(
+            name='Section_1')
+        self.media = Media.objects.create(
+            name='Media_1',
+            local_image='path/to/image.jpg')
         self.material = Material.objects.create(
             name='Material_1',
             section=self.section,
@@ -129,16 +136,23 @@ class MaterialRetrieveSerializerTest(TestCase):
 
     def test_media_links_serializer(self):
         serializer = MaterialRetrieveSerializer(instance=self.material)
-        media_links_serializer = MediaLinkSerializer(instance=self.material.media.all(), many=True)
+        media_links_serializer = MediaLinkSerializer(
+            instance=self.material.media.all(), many=True)
         expected_media_links = media_links_serializer.data
         self.assertEqual(serializer.data['media_links'], expected_media_links)
 
 
 class SectionListSerializerTest(TestCase):
     def setUp(self):
-        self.section = Section.objects.create(name='Section_1', base_price=10)
-        self.media = Media.objects.create(name='Media_1')
-        self.material = Material.objects.create(name='Material_1', section=self.section)
+        self.section = Section.objects.create(
+            name='Section_1',
+            base_price=10)
+        self.media = Media.objects.create(
+            name='Media_1',
+            local_image='path/to/image.jpg')
+        self.material = Material.objects.create(
+            name='Material_1',
+            section=self.section)
         self.section.media.add(self.media)
 
     def tearDown(self):
@@ -160,8 +174,8 @@ class SectionListSerializerTest(TestCase):
         self.assertEqual(serializer.Meta.fields, expected_fields)
 
     def test_media_links_serializer(self):
-        serializer = SectionListSerializer(instance=self.section)
+        serializer = MaterialRetrieveSerializer(instance=self.material)
         media_links_serializer = MediaLinkSerializer(
-            instance=self.section.media.all(), many=True)
+            instance=self.material.media.all(), many=True)
         expected_media_links = media_links_serializer.data
         self.assertEqual(serializer.data['media_links'], expected_media_links)
