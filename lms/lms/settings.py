@@ -245,3 +245,20 @@ CORS_ALLOWED_HEADERS = [
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:8000',
 ]
+
+# Mailing
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# Debugging
+# EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+# EMAIL_FILE_PATH = 'mailing_debugging/'
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_USE_SSL = True
+SERVER_EMAIL = EMAIL_HOST_USER
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+EMAIL_ADMIN = EMAIL_HOST_USER
+EMAIL_TIME_ZONE = 'Asia/Novosibirsk'
+EMAIL_USE_LOCALTIME = True
+EMAIL_TIMEOUT = 60
