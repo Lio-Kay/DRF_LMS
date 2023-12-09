@@ -34,8 +34,8 @@ urlpatterns = [
 
     path('admin/', admin.site.urls),
 
-    path('api/v1/users/', include('users.urls',
-                                  namespace='users')),
+    path('api/v1/accounts/', include('dj_rest_auth.urls')),
+    path('api/v1/accounts/registration/', include('dj_rest_auth.registration.urls')),
     path('api/v1/education/', include('education.urls',
                                       namespace='education')),
 ]
