@@ -262,3 +262,33 @@ class TestAnswerSerializerTest(TestCase):
         expected_fields = ('pk', 'answer',)
         self.assertEqual(serializer.Meta.model, TestAnswer)
         self.assertEqual(serializer.Meta.fields, expected_fields)
+
+
+class TestQuestionSerializerTest(TestCase):
+    def setUp(self):
+        self.test_answer1 = TestAnswer.objects.create(answer='Answer_1')
+        self.test_answer2 = TestAnswer.objects.create(answer='Answer_2')
+        self.test_question = TestQuestion.objects.create(
+            question='Question',
+            answer=self.test_answer1)
+        self.test_question.choices.add(self.test_answer1, self.test_answer2)
+
+    def tearDown(self):
+        self.test_answer1.delete()
+        self.test_answer2.delete()
+        self.test_question.delete()
+
+    def test_get_choices(self):
+        serializer = TestQuestionSerializer(instance=self.test_question)
+        expected_choices = TestAnswer.objects.filter(
+            testquestion_choices=self.test_question).order_by('answer')
+        choices_data = serializer.get_choices(self.test_question)
+        sorted_choices_data = sorted(choices_data, key=lambda x: x['answer'])
+        self.assertEqual(sorted_choices_data, TestAnswerSerializer(
+            expected_choices, many=True).data)
+
+    def test_meta_fields(self):
+        serializer = TestQuestionSerializer()
+        expected_fields = ('question', 'choices',)
+        self.assertEqual(serializer.Meta.model, TestQuestion)
+        self.assertEqual(serializer.Meta.fields, expected_fields)
