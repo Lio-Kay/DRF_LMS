@@ -17,7 +17,7 @@ class CustomRegisterSerializer(RegisterSerializer):
     ]
     gender = serializers.ChoiceField(**NULLABLE, required=False,
                                      choices=gender_choices, default='OTHER')
-    phone = serializers.CharField(**NULLABLE, required=False)
+    phone = PhoneNumberField(**NULLABLE, required=False)
     city = serializers.CharField(**NULLABLE, required=False,
                                  default='Не указан', max_length=100)
     avatar = serializers.ImageField(allow_null=True, required=False)
