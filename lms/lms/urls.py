@@ -20,6 +20,7 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
+
 schema_view = get_schema_view(
     info=openapi.Info(
         title="Habits Tracker Documentation",
@@ -34,7 +35,6 @@ urlpatterns = [
 
     path('admin/', admin.site.urls),
 
-    path('api/v1/accounts/', include(('dj_rest_auth.urls', 'accounts'), namespace='accounts')),
-    path('api/v1/accounts/registration/', include('dj_rest_auth.registration.urls')),
+    path('api/v1/accounts/', include('accounts.urls', namespace='accounts')),
     path('api/v1/education/', include('education.urls', namespace='education'))
 ]
