@@ -71,7 +71,7 @@ class CustomUser(AbstractUser):
                               choices=gender_choices,
                               default='OTHER',
                               verbose_name='Гендер')
-    phone = PhoneNumberField(verbose_name='Телефон')
+    phone = PhoneNumberField(**NULLABLE, verbose_name='Телефон')
     city = models.CharField(**NULLABLE,
                             max_length=100,
                             verbose_name='Город')
