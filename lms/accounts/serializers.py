@@ -1,4 +1,3 @@
-import icecream
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
@@ -7,7 +6,6 @@ from rest_framework import serializers, exceptions
 from dj_rest_auth.serializers import LoginSerializer
 from dj_rest_auth.registration.serializers import RegisterSerializer
 from phonenumber_field.serializerfields import PhoneNumberField
-from django.core.exceptions import ValidationError as DjangoValidationError
 
 try:
     from allauth.account import app_settings as allauth_account_settings
@@ -61,7 +59,6 @@ class CustomLoginSerializer(LoginSerializer):
 
         # Authentication through either username or email
         return self._validate_username_email(username, email, password)
-
 
     def get_auth_user_using_orm(self, username, email, password, phone):
         if email:
