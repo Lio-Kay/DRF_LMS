@@ -1,15 +1,18 @@
+import icecream
+from django.conf import settings
+from django.contrib.auth import get_user_model
+from django.utils.translation import gettext_lazy as _
+from django.urls import exceptions as url_exceptions
 from rest_framework import serializers, exceptions
 from dj_rest_auth.serializers import LoginSerializer
 from dj_rest_auth.registration.serializers import RegisterSerializer
 from phonenumber_field.serializerfields import PhoneNumberField
-from django.utils.translation import gettext_lazy as _
-from django.conf import settings
-from django.contrib.auth import get_user_model
-from django.urls import exceptions as url_exceptions
-
+from django.core.exceptions import ValidationError as DjangoValidationError
 
 try:
     from allauth.account import app_settings as allauth_account_settings
+    from allauth.account.adapter import get_adapter
+    from allauth.account.utils import setup_user_email
 except ImportError:
     raise ImportError('allauth needs to be added to INSTALLED_APPS.')
 
@@ -144,16 +147,25 @@ class CustomRegisterSerializer(RegisterSerializer):
                                     help_text='Фото профиля')
 
     def get_cleaned_data(self):
-        super(CustomRegisterSerializer, self).get_cleaned_data()
         return {
             'email': self.validated_data.get('email', ''),
             'first_name': self.validated_data.get('first_name', ''),
             'last_name': self.validated_data.get('last_name', ''),
             'age': self.validated_data.get('age', ''),
-            'gender': self.validated_data.get('gender', 'Предпочитаю не указывать'),
+            'gender': self.validated_data.get('gender', ''),
             'phone': self.validated_data.get('phone', ''),
-            'city': self.validated_data.get('city', 'Не указан'),
-            'avatar': self.validated_data.get('avatar', '/path_to_default_avatar.jpg'),
+            'city': self.validated_data.get('city', ''),
+            'avatar': self.validated_data.get('avatar', ''),
             'password1': self.validated_data.get('password1', ''),
             'password2': self.validated_data.get('password2', ''),
         }
+
+    def custom_signup(self, request, user):
+        # By default, django-allauth does not permit the preservation of custom fields
+        user.age = self.cleaned_data.get('age')
+        user.gender = self.cleaned_data.get('gender')
+        user.phone = self.cleaned_data.get('phone')
+        user.city = self.cleaned_data.get('city')
+        user.avatar = self.cleaned_data.get('avatar')
+        user.save()
+        return user
