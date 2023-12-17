@@ -73,9 +73,11 @@ class CustomUser(AbstractUser):
                               verbose_name='Гендер')
     phone = PhoneNumberField(**NULLABLE, verbose_name='Телефон')
     city = models.CharField(**NULLABLE,
+                            default='Не указан',
                             max_length=100,
                             verbose_name='Город')
     avatar = models.ImageField(**NULLABLE,
+                               default='/path_to_default_avatar.jpg',
                                upload_to='users/media/avatars/',
                                verbose_name='Аватар',
                                validators=[
