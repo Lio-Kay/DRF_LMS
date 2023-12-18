@@ -16,23 +16,23 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from rest_framework import permissions
-from drf_yasg.views import get_schema_view
-from drf_yasg import openapi
 from accounts.views import VerifyEmailAPIView
+from drf_spectacular.views import (SpectacularAPIView,
+                                   SpectacularRedocView,
+                                   SpectacularSwaggerView)
 
-
-schema_view = get_schema_view(
-    info=openapi.Info(
-        title="Habits Tracker Documentation",
-        default_version='v1',),
-    public=True,
-    permission_classes=[permissions.AllowAny,],
-)
 
 urlpatterns = [
-    path('api/v1/redoc/', schema_view.with_ui('redoc', cache_timeout=0),
-         name='schema-redoc'),
+    path('api/v1/schema/',
+         SpectacularAPIView.as_view(),
+         name='schema'),
+    # Optional UI:
+    path('api/v1/schema/swagger-ui/',
+         SpectacularSwaggerView.as_view(url_name='schema'),
+         name='swagger-ui'),
+    path('api/v1/schema/redoc/',
+         SpectacularRedocView.as_view(url_name='schema'),
+         name='redoc'),
 
     path('admin/', admin.site.urls),
 
