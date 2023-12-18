@@ -19,7 +19,7 @@ from django.urls import path, include
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
-from allauth.account.views import ConfirmEmailView
+from accounts.views import VerifyEmailAPIView
 
 
 schema_view = get_schema_view(
@@ -36,8 +36,16 @@ urlpatterns = [
 
     path('admin/', admin.site.urls),
 
-    path('api/v1/dj-rest-auth/', include('dj_rest_auth.urls')),
-    path('api/v1/dj-rest-auth/registration/account-confirm-email/<str:key>/', ConfirmEmailView.as_view()),
-    path('api/v1/dj-rest-auth/registration/', include('dj_rest_auth.registration.urls')),
-    path('api/v1/education/', include('education.urls', namespace='education'))
+    path('api/v1/dj-rest-auth/',
+         include('dj_rest_auth.urls')),
+    path('api/v1/dj-rest-auth/registration/verify-email/',
+         include('dj_rest_auth.registration.urls')),
+    path('api/v1/dj-rest-auth/registration/account-confirm-email/<str:key>/',
+         VerifyEmailAPIView.as_view(),
+         name='account_confirm_email'),
+    path('api/v1/dj-rest-auth/registration/',
+         include('dj_rest_auth.registration.urls')),
+
+    path('api/v1/education/',
+         include('education.urls', namespace='education'))
 ]
