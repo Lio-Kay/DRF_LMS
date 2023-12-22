@@ -52,38 +52,36 @@ class CustomUser(AbstractUser):
     """Кастомная модель пользователя"""
     username = None
 
-    email = models.EmailField(unique=True, verbose_name='Email')
-    first_name = models.CharField(max_length=50, verbose_name='Имя')
-    last_name = models.CharField(max_length=50, verbose_name='Фамилия')
-    age = models.PositiveSmallIntegerField(**NULLABLE, verbose_name='Возраст',
-                                           validators=[
-                                               MinValueValidator(12),
-                                               MaxValueValidator(120)
-                                           ]
-                                           )
+    email = models.EmailField(
+        unique=True, verbose_name='Email')
+    first_name = models.CharField(
+        max_length=50, verbose_name='Имя')
+    last_name = models.CharField(
+        max_length=50, verbose_name='Фамилия')
+    age = models.PositiveSmallIntegerField(
+        **NULLABLE, verbose_name='Возраст', validators=[
+            MinValueValidator(12),
+            MaxValueValidator(120)
+        ]
+    )
     gender_choices = [
         ('MALE', 'Мужчина'),
         ('FEMALE', 'Женщина'),
         ('OTHER', 'Предпочитаю не указывать'),
     ]
-    gender = models.CharField(**NULLABLE,
-                              max_length=6,
-                              choices=gender_choices,
-                              default='OTHER',
-                              verbose_name='Гендер')
-    phone = PhoneNumberField(**NULLABLE, verbose_name='Телефон')
-    city = models.CharField(**NULLABLE,
-                            default='Не указан',
-                            max_length=100,
-                            verbose_name='Город')
-    avatar = models.ImageField(**NULLABLE,
-                               default='/path_to_default_avatar.jpg',
-                               upload_to='users/media/avatars/',
-                               verbose_name='Аватар',
-                               validators=[
-                                   validate_image_file_extension
-                               ]
-                               )
+    gender = models.CharField(
+        **NULLABLE, max_length=6, choices=gender_choices, default='OTHER',
+        verbose_name='Гендер')
+    phone = PhoneNumberField(
+        **NULLABLE, verbose_name='Телефон')
+    city = models.CharField(
+        **NULLABLE, default='Не указан', max_length=100, verbose_name='Город')
+    avatar = models.ImageField(
+        **NULLABLE, default='/path_to_default_avatar.jpg',
+        upload_to='users/media/avatars/', verbose_name='Аватар', validators=[
+            validate_image_file_extension
+        ]
+    )
 
     objects = CustomUserManager()
 
