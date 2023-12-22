@@ -5,7 +5,6 @@ from djmoney.models.fields import MoneyField
 
 from education.apps import EducationConfig
 
-
 app_name = EducationConfig.name
 
 NULLABLE = {'blank': True, 'null': True}
@@ -13,27 +12,27 @@ NULLABLE = {'blank': True, 'null': True}
 
 class Media(models.Model):
     """Модель медиа"""
-    name = models.CharField(max_length=100,
-                            verbose_name='Название')
+    name = models.CharField(
+        max_length=100, verbose_name='Название')
 
-    creation_date = models.DateTimeField(**NULLABLE,
-                                         verbose_name='Дата создания')
+    creation_date = models.DateTimeField(
+        **NULLABLE, verbose_name='Дата создания')
 
-    local_image = models.ImageField(**NULLABLE,
-                                    upload_to='education/media/images/%Y/%m%d/',
-                                    verbose_name='Локальное изображение')
-    external_image = models.URLField(**NULLABLE,
-                                     verbose_name='Внешнее изображение')
-    local_video = models.FileField(**NULLABLE,
-                                   upload_to='education/media/videos/%Y/%m%d/',
-                                   verbose_name='Локальное видео')
-    external_video = models.URLField(**NULLABLE,
-                                     verbose_name='Внешнее видео')
-    local_audio = models.FileField(**NULLABLE,
-                                   upload_to='education/media/audios/%Y/%m%d/',
-                                   verbose_name='Локальное аудио')
-    external_audio = models.URLField(**NULLABLE,
-                                     verbose_name='Внешнее аудио')
+    local_image = models.ImageField(
+        **NULLABLE, upload_to='education/media/images/%Y/%m%d/',
+        verbose_name='Локальное изображение')
+    external_image = models.URLField(
+        **NULLABLE, verbose_name='Внешнее изображение')
+    local_video = models.FileField(
+        **NULLABLE, upload_to='education/media/videos/%Y/%m%d/',
+        verbose_name='Локальное видео')
+    external_video = models.URLField(
+        **NULLABLE, verbose_name='Внешнее видео')
+    local_audio = models.FileField(
+        **NULLABLE, upload_to='education/media/audios/%Y/%m%d/',
+        verbose_name='Локальное аудио')
+    external_audio = models.URLField(
+        **NULLABLE, verbose_name='Внешнее аудио')
 
     def __str__(self):
         fields = [self.name]
@@ -70,7 +69,7 @@ class Media(models.Model):
             raise ValidationError('Медиа файл должен быть указан')
         if sum(bool(field) for field in image_fields) + sum(
                 bool(field) for field in video_fields) + sum(
-                bool(field) for field in audio_fields) > 1:
+            bool(field) for field in audio_fields) > 1:
             raise ValidationError('Только один медиа файл может быть выбран')
 
     def save(self, force_insert=False, force_update=False,
@@ -84,38 +83,35 @@ class Media(models.Model):
 
 class Section(models.Model):
     """Модель раздела"""
-    name = models.CharField(max_length=100,
-                            verbose_name='Название')
-    description = models.TextField(verbose_name='Описание')
+    name = models.CharField(
+        max_length=100, verbose_name='Название')
+    description = models.TextField(
+        verbose_name='Описание')
     status_choices = [
         ('ARCHIVED', 'Архивированный'),
         ('CLOSED', 'Закрытый'),
         ('OPEN', 'Открытый'),
     ]
-    status = models.CharField(**NULLABLE,
-                              max_length=8,
-                              choices=status_choices,
-                              default='CLOSED',
-                              verbose_name='Статус раздела')
+    status = models.CharField(
+        **NULLABLE, max_length=8, choices=status_choices, default='CLOSED',
+        verbose_name='Статус раздела')
 
-    creation_date = models.DateTimeField(**NULLABLE,
-                                         verbose_name='Дата создания')
-    last_update = models.DateTimeField(**NULLABLE,
-                                       verbose_name='Дата последнего обновления')
+    creation_date = models.DateTimeField(
+        **NULLABLE, verbose_name='Дата создания')
+    last_update = models.DateTimeField(
+        **NULLABLE, verbose_name='Дата последнего обновления')
 
-    base_price = MoneyField(max_digits=14,
-                            decimal_places=2,
-                            default=0,
-                            default_currency='RUB',
-                            verbose_name='Базовая цена')
+    base_price = MoneyField(
+        max_digits=14, decimal_places=2, default=0, default_currency='RUB',
+        verbose_name='Базовая цена')
 
-    media = models.ManyToManyField(blank=True,
-                                   to=Media,
-                                   related_name='section_media')
+    media = models.ManyToManyField(
+        blank=True, to=Media, related_name='section_media')
 
     def __str__(self):
         return (f'Name: {self.name}, Status: {self.status}, '
-                f'Created: {self.creation_date}, Base price: {self.base_price}')
+                f'Created: {self.creation_date}, '
+                f'Base price: {self.base_price}')
 
     class Meta:
         verbose_name = 'раздел'
@@ -142,34 +138,29 @@ class Section(models.Model):
 
 class Material(models.Model):
     """Модель материала"""
-    name = models.CharField(max_length=100,
-                            verbose_name='Название')
-    text = models.TextField(**NULLABLE,
-                            verbose_name='Текст')
+    name = models.CharField(
+        max_length=100, verbose_name='Название')
+    text = models.TextField(
+        **NULLABLE, verbose_name='Текст')
     status_choices = [
         ('ARCHIVED', 'Архивированный'),
         ('CLOSED', 'Закрытый'),
         ('OPEN', 'Открытый'),
     ]
-    status = models.CharField(**NULLABLE,
-                              max_length=8,
-                              choices=status_choices,
-                              default='CLOSED',
-                              verbose_name='Статус материала')
+    status = models.CharField(
+        **NULLABLE, max_length=8, choices=status_choices, default='CLOSED',
+        verbose_name='Статус материала')
 
-    creation_date = models.DateTimeField(**NULLABLE,
-                                         verbose_name='Дата создания')
-    last_update = models.DateTimeField(**NULLABLE,
-                                       verbose_name='Дата последнего '
-                                                    'обновления')
+    creation_date = models.DateTimeField(
+        **NULLABLE, verbose_name='Дата создания')
+    last_update = models.DateTimeField(
+        **NULLABLE, verbose_name='Дата последнего обновления')
 
-    media = models.ManyToManyField(blank=True,
-                                   to=Media,
-                                   related_name='material_media')
-    section = models.ForeignKey(**NULLABLE,
-                                to=Section,
-                                on_delete=models.SET_NULL,
-                                related_name='material_section')
+    media = models.ManyToManyField(
+        blank=True, to=Media, related_name='material_media')
+    section = models.ForeignKey(
+        **NULLABLE, to=Section, on_delete=models.SET_NULL,
+        related_name='material_section')
 
     def __str__(self):
         return (f'Name: {self.name}, Status: {self.status}, '
@@ -210,8 +201,7 @@ class Material(models.Model):
 class TestAnswer(models.Model):
     """Модель ответа на вопрос теста"""
     answer = models.CharField(
-        max_length=1_000,
-        verbose_name='Выбор варианта ответа')
+        max_length=1_000, verbose_name='Выбор варианта ответа')
 
     def __str__(self):
         return f'Answer: {self.answer}'
@@ -224,15 +214,15 @@ class TestAnswer(models.Model):
 
 class TestQuestion(models.Model):
     """Модель вопроса теста"""
-    question = models.TextField(verbose_name='Вопрос')
-    answer = models.OneToOneField(to=TestAnswer,
-                                  on_delete=models.CASCADE,
-                                  related_name='testquestion_answer')
-    choices = models.ManyToManyField(to=TestAnswer,
-                                     related_name='testquestion_choices')
-    media = models.ManyToManyField(blank=True,
-                                   to=Media,
-                                   related_name='testquestion_media')
+    question = models.TextField(
+        verbose_name='Вопрос')
+    answer = models.OneToOneField(
+        to=TestAnswer, on_delete=models.CASCADE,
+        related_name='testquestion_answer')
+    choices = models.ManyToManyField(
+        to=TestAnswer, related_name='testquestion_choices')
+    media = models.ManyToManyField(
+        blank=True, to=Media, related_name='testquestion_media')
 
     def __str__(self):
         return f'Question: {self.question}, {self.answer}'
@@ -245,17 +235,16 @@ class TestQuestion(models.Model):
 
 class Test(models.Model):
     """Модель теста"""
-    material = models.OneToOneField(**NULLABLE,
-                                    to=Material,
-                                    on_delete=models.CASCADE,
-                                    related_name='test_material')
-    question = models.ManyToManyField(to=TestQuestion,
-                                      related_name='test_question')
+    material = models.OneToOneField(
+        **NULLABLE, to=Material, on_delete=models.CASCADE,
+        related_name='test_material')
+    question = models.ManyToManyField(
+        to=TestQuestion, related_name='test_question')
 
-    creation_date = models.DateTimeField(**NULLABLE,
-                                         verbose_name='Дата создания')
-    last_update = models.DateTimeField(**NULLABLE,
-                                       verbose_name='Дата последнего обновления')
+    creation_date = models.DateTimeField(
+        **NULLABLE, verbose_name='Дата создания')
+    last_update = models.DateTimeField(
+        **NULLABLE, verbose_name='Дата последнего обновления')
 
     def __str__(self):
         question_list = ', '.join(
