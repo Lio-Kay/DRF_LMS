@@ -6,6 +6,9 @@ User = get_user_model()
 
 
 class Command(BaseCommand):
+    """Команда для создания суперпользователя"""
+
+    help = 'Создает суперпользователя'
 
     def handle(self, *args, **options):
 
@@ -15,5 +18,5 @@ class Command(BaseCommand):
             last_name='Admin',
             phone='+1234567890',
         )
-        user.set_password('1234')
+        user.set_password('admin')
         user.save()
