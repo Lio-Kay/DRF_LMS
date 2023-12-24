@@ -10,12 +10,10 @@ User = get_user_model()
 class Command(BaseCommand):
     """Команда для удаления всех пользователей, кроме персонала и заполнения
     БД при помощи библиотеки Faker"""
-
     help = ('Удаляет всех пользователей, кроме персонала, и заполняет БД '
             'новыми пользователями.')
 
     def handle(self, *args, **options):
-
         number_of_users = input('Какое кол-во пользователей добавить?\n')
         try:
             number_of_users = int(number_of_users)
@@ -41,4 +39,5 @@ class Command(BaseCommand):
 
         self.stdout.write(self.style.SUCCESS(
             f'Удалили всех пользователей, кроме персонала, и заполнили БД '
-            f'{number_of_users} новыми пользователями.'))
+            f'{number_of_users} новыми пользователями.')
+        )
