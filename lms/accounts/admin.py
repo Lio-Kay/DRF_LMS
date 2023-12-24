@@ -3,6 +3,11 @@ from django.contrib import admin
 from accounts.models import CustomUser
 
 
+@admin.action(description='Активировать пользователя')
+def activate_user(modeladmin, request, queryset):
+    queryset.update(is_active=True)
+
+
 @admin.action(description='Деактивировать пользователя')
 def deactivate_user(modeladmin, request, queryset):
     queryset.update(is_active=False)
@@ -17,4 +22,4 @@ class UserAdmin(admin.ModelAdmin):
     search_fields = 'last_name', 'age', 'gender', 'phone', 'city',
     list_editable = 'last_name', 'age', 'gender', 'phone', 'city',
 
-    actions = deactivate_user,
+    actions = activate_user, deactivate_user
