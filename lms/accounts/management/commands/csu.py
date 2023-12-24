@@ -7,10 +7,17 @@ User = get_user_model()
 
 class Command(BaseCommand):
     """Команда для создания суперпользователя"""
-
-    help = 'Создает суперпользователя'
+    help = ('Создает суперпользователя. Email: admin@admin.com, '
+            'Phone: +1234567890, Password: admin')
 
     def handle(self, *args, **options):
+        if User.objects.filter(email='admin@admin.com'):
+            self.stderr.write(
+                self.style.ERROR('Суперпользователь уже существует. '
+                                 'Email: admin @ admin.com, '
+                                 'Phone: +1234567890, Password: admin')
+            )
+            exit()
 
         user = User.objects.create_superuser(
             email='admin@admin.com',
@@ -20,3 +27,8 @@ class Command(BaseCommand):
         )
         user.set_password('admin')
         user.save()
+
+        self.stdout.write(self.style.SUCCESS(
+            f'Создали суперпользователя. Email: admin@admin.com, '
+            'Phone: +1234567890, Password: admin')
+        )
