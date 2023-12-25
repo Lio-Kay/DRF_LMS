@@ -227,6 +227,35 @@ class MaterialModelTests(TestCase):
         section = Section.objects.create(
             name='Test_Section',
             status='ARCHIVED')
+
+        with self.assertRaises(IntegrityError):
+            with self.assertRaises(ValidationError):
+                with transaction.atomic():
+                    material = Material.objects.create(
+                        name='Test_Material',
+                        status='ARCHIVED',
+                        creation_date=timezone.now(),
+                        last_update=timezone.now() - timedelta(days=1),
+                        section=section,
+                    )
+                    material.clean()
+        material = Material.objects.create(
+            name='Test_Material',
+            status='ARCHIVED',
+            creation_date=timezone.now(),
+            last_update=timezone.now(),
+            section=section,
+        )
+        material.clean()
+        material = Material.objects.create(
+            name='Test_Material',
+            status='ARCHIVED',
+            creation_date=timezone.now() - timedelta(days=1),
+            last_update=timezone.now(),
+            section=section,
+        )
+        material.clean()
+
         material = Material(
             name='Test_Material',
             status='OPEN',
