@@ -60,16 +60,14 @@ class Media(models.Model):
 
     def clean(self):
         # Проверка на обязательный выбор только одного медиа файла
-        image_fields = [self.local_image, self.external_image]
-        video_fields = [self.local_video, self.external_video]
-        audio_fields = [self.local_audio, self.external_audio]
-
-        if not any(image_fields) and not any(video_fields) and not any(
-                audio_fields):
+        sum_of_fields = sum(bool(field) for field in [
+            self.local_image, self.external_image,
+            self.local_video, self.external_video,
+            self.local_audio, self.external_audio
+        ])
+        if sum_of_fields == 0:
             raise ValidationError('Медиа файл должен быть указан')
-        if sum(bool(field) for field in image_fields) + sum(
-                bool(field) for field in video_fields) + sum(
-            bool(field) for field in audio_fields) > 1:
+        if sum_of_fields > 1:
             raise ValidationError('Только один медиа файл может быть выбран')
 
     def save(self, force_insert=False, force_update=False,
