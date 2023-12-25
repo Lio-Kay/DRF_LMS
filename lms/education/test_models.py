@@ -120,7 +120,7 @@ class SectionModelTests(TestCase):
         self.assertEqual(section.status, 'CLOSED')
 
     def test_constraint(self):
-        # Проверка даты обновления позже или одинаковой с датой создания
+        # Проверка даты обновления позже или c одинаковой с датой создания
         with self.assertRaises(IntegrityError):
             with transaction.atomic():
                 Section.objects.create(
@@ -130,7 +130,7 @@ class SectionModelTests(TestCase):
                 )
 
     def test_clean_method(self):
-        # Проверка даты обновления позже или одинаковой с датой создания
+        # Проверка даты обновления позже или c одинаковой с датой создания
         with self.assertRaises(IntegrityError):
             with self.assertRaises(ValidationError):
                 with transaction.atomic():
@@ -216,7 +216,7 @@ class MaterialModelTests(TestCase):
             name='Test_Section',
             status='ARCHIVED')
 
-        # Проверка даты обновления позже или одинаковой с датой создания
+        # Проверка даты обновления позже или c одинаковой с датой создания
         with self.assertRaises(IntegrityError):
             with self.assertRaises(ValidationError):
                 with transaction.atomic():
@@ -251,7 +251,8 @@ class MaterialModelTests(TestCase):
             status='OPEN',
             creation_date=timezone.now() - timedelta(days=1),
             last_update=timezone.now(),
-            section=section)
+            section=section,
+        )
         with self.assertRaises(ValidationError):
             material.clean()
         section = Section.objects.create(
@@ -324,8 +325,8 @@ class TestModelTests(TestCase):
         self.test_question.choices.add(self.test_answer1, self.test_answer2)
         self.test = Test.objects.create(
             material=self.material,
-            creation_date=timezone.now(),
-            last_update=timezone.now()
+            creation_date='2023-01-01T00:00:00Z',
+            last_update='2023-01-01T00:00:00Z',
         )
         self.test.question.add(self.test_question)
 
@@ -340,37 +341,49 @@ class TestModelTests(TestCase):
         tests_count = Test.objects.count()
         self.assertEqual(tests_count, 1)
         self.assertEqual(self.test.material, self.material)
-        self.assertEqual(self.test.creation_date.date(), timezone.now().date())
-        self.assertEqual(self.test.last_update.date(), timezone.now().date())
+        self.assertEqual(self.test.creation_date, '2023-01-01T00:00:00Z')
+        self.assertEqual(self.test.last_update, '2023-01-01T00:00:00Z')
         self.assertEqual(self.test.question.count(), 1)
         self.assertEqual(self.test.question.first().question, 'Question')
         self.assertEqual(self.test.question.first().answer.answer, 'Answer1')
 
     def test_str_representation(self):
-        test_answer = TestAnswer.objects.create(answer='Answer1')
-        test_question = TestQuestion.objects.create(
-            question='Test_Question',
-            answer=test_answer)
-        test_question.choices.add(test_answer)
-        test = Test.objects.create(
-            creation_date='2023-01-01T00:00:00Z',
-        )
-        test.question.add(test_question)
-        expected_str = 'Question: Test_Question, Created: 2023-01-01T00:00:00Z'
-        self.assertEqual(str(test), expected_str)
+        expected_str = 'Question: Question, Created: 2023-01-01T00:00:00Z'
+        self.assertEqual(str(self.test), expected_str)
 
-    def test_last_update_after_creation_date(self):
+    def test_constraint(self):
+        # Проверка даты обновления позже или c одинаковой с датой создания
         with self.assertRaises(IntegrityError):
             with transaction.atomic():
                 Test.objects.create(
                     creation_date=timezone.now(),
-                    last_update=timezone.now() - timedelta(days=1)
+                    last_update=timezone.now() - timedelta(days=1),
                 )
+
+    def test_clean_method(self):
+        # Проверка даты обновления позже или c одинаковой с датой создания
+        with self.assertRaises(IntegrityError):
+            with self.assertRaises(ValidationError):
+                with transaction.atomic():
+                    test = Test.objects.create(
+                        creation_date=timezone.now(),
+                        last_update=timezone.now() - timedelta(days=1),
+                    )
+                    test.clean()
+        test = Test.objects.create(
+            creation_date=timezone.now(),
+            last_update=timezone.now(),
+        )
+        test.clean()
+        test = Test.objects.create(
+            creation_date=timezone.now() - timedelta(days=1),
+            last_update=timezone.now(),
+        )
+        test.clean()
 
     def test_save_method(self):
         test = Test.objects.create()
-        self.assertIsNotNone(test.creation_date)
+        # Автозапись даты создания
         self.assertEqual(test.creation_date.date(), timezone.now().date())
-        test = Test.objects.create()
-        self.assertIsNotNone(test.last_update)
+        # Автозапись даты обновления
         self.assertEqual(test.last_update.date(), timezone.now().date())
