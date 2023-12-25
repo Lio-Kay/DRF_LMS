@@ -1,9 +1,9 @@
+from datetime import timedelta
 from django.test import TestCase
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.db import transaction
 from django.db.utils import IntegrityError
-from datetime import timedelta
 
 from education.models import (Media, Section, Material, TestAnswer,
                               TestQuestion, Test)
@@ -32,8 +32,8 @@ class MediaModelTests(TestCase):
         self.assertEqual(media_count, 1)
         self.assertEqual(self.media.name, 'Test_Media')
         self.assertEqual(
-            first=self.media.external_image,
-            second='https://example.com/image.jpg')
+            self.media.external_image,
+            'https://example.com/image.jpg')
 
     def test_str_representation(self):
         expected_str = ('Test_Media, 2023-01-01T00:00:00Z, '
