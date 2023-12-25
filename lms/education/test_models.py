@@ -229,8 +229,9 @@ class MaterialModelTests(TestCase):
             status='ARCHIVED')
         material = Material(
             name='Test_Material',
-            status='OPEM',
             status='OPEN',
+            creation_date=timezone.now() - timedelta(days=1),
+            last_update=timezone.now(),
             section=section)
         with self.assertRaises(ValidationError):
             material.clean()
@@ -240,7 +241,9 @@ class MaterialModelTests(TestCase):
             status='CLOSED')
         material = Material(
             name='Test_Material',
-            status='OPEM',
+            status='OPEN',
+            creation_date=timezone.now() - timedelta(days=1),
+            last_update=timezone.now(),
             section=section)
         with self.assertRaises(ValidationError):
             material.clean()
