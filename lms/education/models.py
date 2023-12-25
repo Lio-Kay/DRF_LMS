@@ -126,7 +126,7 @@ class Section(models.Model):
     def clean(self):
         # Проверка даты обновления позже или одинаковой с датой создания
         if self.last_update < self.creation_date:
-            raise models.ValidationError(
+            raise ValidationError(
                 'Дата обновления не может быть раньше даты создания'
             )
 
@@ -186,7 +186,7 @@ class Material(models.Model):
     def clean(self):
         # Проверка даты обновления позже или одинаковой с датой создания
         if self.last_update < self.creation_date:
-            raise models.ValidationError(
+            raise ValidationError(
                 'Дата обновления не может быть раньше даты создания'
             )
         # Проверка на соответствие статуса материала статусу раздела
@@ -276,7 +276,7 @@ class Test(models.Model):
     def clean(self):
         # Проверка даты обновления позже или одинаковой с датой создания
         if self.last_update < self.creation_date:
-            raise models.ValidationError(
+            raise ValidationError(
                 'Дата обновления не может быть раньше даты создания'
             )
 
