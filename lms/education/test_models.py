@@ -268,7 +268,7 @@ class MaterialModelTests(TestCase):
 
 class TestAnswerModelTests(TestCase):
     def setUp(self):
-        self.answer = TestAnswer.objects.create(answer=1)
+        self.answer = TestAnswer.objects.create(answer='Test_Answer')
 
     def tearDown(self):
         self.answer.delete()
@@ -276,14 +276,11 @@ class TestAnswerModelTests(TestCase):
     def test_create_answer(self):
         answer_count = TestAnswer.objects.count()
         self.assertEqual(answer_count, 1)
-        self.assertEqual(self.answer.answer, 1)
+        self.assertEqual(self.answer.answer, 'Test_Answer')
 
     def test_str_representation(self):
-        answer = TestAnswer(
-            answer='Test_Answer'
-        )
         expected_str = 'Answer: Test_Answer'
-        self.assertEqual(str(answer), expected_str)
+        self.assertEqual(str(self.answer), expected_str)
 
 
 class TestQuestionModelTests(TestCase):
