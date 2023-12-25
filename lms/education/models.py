@@ -185,6 +185,11 @@ class Material(models.Model):
         ]
 
     def clean(self):
+        # Проверка даты обновления позже или одинаковой с датой создания
+        if self.last_update < self.creation_date:
+            raise models.ValidationError(
+                'Дата обновления не может быть раньше даты создания'
+            )
         # Проверка на соответствие статуса материала статусу раздела
         if self.section.status == 'ARCHIVED' and self.status != 'ARCHIVED':
             raise ValidationError('Материал должен иметь тот же статус,'
