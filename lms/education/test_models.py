@@ -42,7 +42,7 @@ class MediaModelTests(TestCase):
                         'path/to/audio.mp3, https://example.com/audio.mp3')
         self.assertEqual(str(self.media), expected_str)
 
-    def test_one_media_selected(self):
+    def test_clean_method(self):
         # Медиафайл должен быть выбран
         media = Media(name='Test_Media')
         with self.assertRaises(ValidationError):
@@ -78,9 +78,9 @@ class MediaModelTests(TestCase):
         )
         media.clean()
 
-    def test_creation_date_auto_set(self):
+    def test_save_method(self):
+        # Автозапись даты создания
         media = Media.objects.create(name='Test_Media')
-        self.assertIsNotNone(media.creation_date)
         self.assertEqual(media.creation_date.date(), timezone.now().date())
 
 
