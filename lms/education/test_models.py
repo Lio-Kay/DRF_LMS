@@ -88,8 +88,8 @@ class SectionModelTests(TestCase):
             name='Test_Section',
             description='Test_Description',
             status='OPEN',
-            creation_date=timezone.now(),
-            last_update=timezone.now(),
+            creation_date='2023-01-01T00:00:00Z',
+            last_update='2023-01-01T00:00:00Z',
             base_price=100,
         )
         self.section.media.add(self.media)
@@ -104,47 +104,41 @@ class SectionModelTests(TestCase):
         self.assertEqual(self.section.name, 'Test_Section')
         self.assertEqual(self.section.description, 'Test_Description')
         self.assertEqual(self.section.status, 'OPEN')
-        self.assertAlmostEqual(self.section.creation_date, timezone.now(),
-                               delta=timedelta(seconds=1))
-        self.assertAlmostEqual(self.section.last_update, timezone.now(),
-                               delta=timedelta(seconds=1))
+        self.assertEqual(self.section.creation_date, '2023-01-01T00:00:00Z')
+        self.assertEqual(self.section.last_update, '2023-01-01T00:00:00Z')
         self.assertEqual(self.section.base_price.amount, 100)
         self.assertIn(self.media, self.section.media.all())
 
     def test_str_representation(self):
-        section = Section(
-            name='Test_Section',
-            status='OPEN',
-            creation_date='2023-01-01T00:00:00Z',
-            base_price=100
-        )
-        expected_str = 'Name: Test_Section, Status: OPEN, Created: 2023-01-01T00:00:00Z, Base price: 100,00\xa0₽'
-        self.assertEqual(str(section), expected_str)
+        expected_str = ('Name: Test_Section, Status: OPEN, '
+                        'Created: 2023-01-01T00:00:00Z, '
+                        'Base price: 100,00\xa0₽')
+        self.assertEqual(str(self.section), expected_str)
 
     def test_status_choices_auto_set(self):
         section = Section.objects.create(name='Test_Section')
         self.assertEqual(section.status, 'CLOSED')
 
-    def test_last_update_after_creation_date(self):
+    def test_constraint(self):
+        # Проверка даты обновления позже или одинаковой с датой создания
         with self.assertRaises(IntegrityError):
             with transaction.atomic():
                 Section.objects.create(
                     name='Test_Section',
                     creation_date=timezone.now(),
-                    last_update=timezone.now() - timedelta(days=1)
+                    last_update=timezone.now() - timedelta(days=1),
                 )
 
     def test_clean_method(self):
+        # Проверка даты обновления позже или одинаковой с датой создания
         with self.assertRaises(IntegrityError):
             with self.assertRaises(ValidationError):
                 with transaction.atomic():
-                    section = Section.objects.create(
+                    Section.objects.create(
                         name='Test_Section',
-                        status='ARCHIVED',
                         creation_date=timezone.now(),
                         last_update=timezone.now() - timedelta(days=1),
                     )
-                    section.clean()
         section = Section.objects.create(
             name='Test_Section',
             status='ARCHIVED',
@@ -161,11 +155,10 @@ class SectionModelTests(TestCase):
         section.clean()
 
     def test_save_method(self):
+        # Автозапись даты создания
         section = Section.objects.create(name='Test_Section')
-        self.assertIsNotNone(section.creation_date)
         self.assertEqual(section.creation_date.date(), timezone.now().date())
-        section = Section.objects.create(name='Test_Section')
-        self.assertIsNotNone(section.last_update)
+        # Автозапись даты обновления
         self.assertEqual(section.last_update.date(), timezone.now().date())
 
 
