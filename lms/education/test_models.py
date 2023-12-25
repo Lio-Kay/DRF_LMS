@@ -134,6 +134,32 @@ class SectionModelTests(TestCase):
                     last_update=timezone.now() - timedelta(days=1)
                 )
 
+    def test_clean_method(self):
+        with self.assertRaises(IntegrityError):
+            with self.assertRaises(ValidationError):
+                with transaction.atomic():
+                    section = Section.objects.create(
+                        name='Test_Section',
+                        status='ARCHIVED',
+                        creation_date=timezone.now(),
+                        last_update=timezone.now() - timedelta(days=1),
+                    )
+                    section.clean()
+        section = Section.objects.create(
+            name='Test_Section',
+            status='ARCHIVED',
+            creation_date=timezone.now(),
+            last_update=timezone.now(),
+        )
+        section.clean()
+        section = Section.objects.create(
+            name='Test_Section',
+            status='ARCHIVED',
+            creation_date=timezone.now() - timedelta(days=1),
+            last_update=timezone.now(),
+        )
+        section.clean()
+
     def test_save_method(self):
         section = Section.objects.create(name='Test_Section')
         self.assertIsNotNone(section.creation_date)
