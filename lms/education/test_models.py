@@ -285,8 +285,8 @@ class TestAnswerModelTests(TestCase):
 
 class TestQuestionModelTests(TestCase):
     def setUp(self):
-        self.answer1 = TestAnswer.objects.create(answer=1)
-        self.answer2 = TestAnswer.objects.create(answer=2)
+        self.answer1 = TestAnswer.objects.create(answer='Test_Answer1')
+        self.answer2 = TestAnswer.objects.create(answer='Test_Answer2')
         self.media = Media.objects.create(name='Test_Media')
         self.testquestion = TestQuestion.objects.create(
             question='Test_Question',
@@ -309,13 +309,8 @@ class TestQuestionModelTests(TestCase):
         self.assertIn(self.media, self.testquestion.media.all())
 
     def test_str_representation(self):
-        test_answer = TestAnswer.objects.create(answer='Test_Answer')
-        test_question = TestQuestion.objects.create(
-            question='Test_Question',
-            answer=test_answer
-        )
-        expected_str = 'Question: Test_Question, Answer: Test_Answer'
-        self.assertEqual(str(test_question), expected_str)
+        expected_str = 'Question: Test_Question, Answer: Test_Answer1'
+        self.assertEqual(str(self.testquestion), expected_str)
 
 
 class TestModelTests(TestCase):
