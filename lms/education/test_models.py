@@ -230,6 +230,7 @@ class MaterialModelTests(TestCase):
         material = Material(
             name='Test_Material',
             status='OPEM',
+            status='OPEN',
             section=section)
         with self.assertRaises(ValidationError):
             material.clean()
