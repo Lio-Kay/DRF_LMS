@@ -43,12 +43,10 @@ class MediaModelTests(TestCase):
         self.assertEqual(str(self.media), expected_str)
 
     def test_clean_method(self):
-        # Медиафайл должен быть выбран
+        # Проверка на обязательный выбор только одного медиа файла
         media = Media(name='Test_Media')
         with self.assertRaises(ValidationError):
             media.clean()
-
-        # Ошибка при нескольких файлах
         media = Media(
             name='Test_Media',
             local_image='path/to/image.jpg',
@@ -70,7 +68,6 @@ class MediaModelTests(TestCase):
         )
         with self.assertRaises(ValidationError):
             media.clean()
-
         # Выполнение метода без ошибок
         media = Media(
             name='Test_Media',
