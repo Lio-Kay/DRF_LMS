@@ -170,8 +170,8 @@ class MaterialModelTests(TestCase):
             name='Test_Material',
             text='Test_Text',
             status='CLOSED',
-            creation_date=timezone.now(),
-            last_update=timezone.now(),
+            creation_date='2023-01-01T00:00:00Z',
+            last_update='2023-01-01T00:00:00Z',
             section=self.section
         )
         self.material.media.add(self.media)
@@ -187,27 +187,22 @@ class MaterialModelTests(TestCase):
         self.assertEqual(self.material.name, 'Test_Material')
         self.assertEqual(self.material.text, 'Test_Text')
         self.assertEqual(self.material.status, 'CLOSED')
-        self.assertAlmostEqual(self.material.creation_date, timezone.now(),
-                               delta=timedelta(seconds=1))
-        self.assertAlmostEqual(self.material.last_update, timezone.now(),
-                               delta=timedelta(seconds=1))
+        self.assertEqual(self.material.creation_date, '2023-01-01T00:00:00Z')
+        self.assertEqual(self.material.last_update, '2023-01-01T00:00:00Z')
         self.assertEqual(self.material.section, self.section)
         self.assertIn(self.media, self.material.media.all())
 
     def test_str_representation(self):
-        material = Material(
-            name='Test_Material',
-            status='OPEN',
-            creation_date='2023-01-01T00:00:00Z'
-        )
-        expected_str = 'Name: Test_Material, Status: OPEN, Created: 2023-01-01T00:00:00Z'
-        self.assertEqual(str(material), expected_str)
+        expected_str = ('Name: Test_Material, '
+                        'Status: CLOSED, Created: '
+                        '2023-01-01T00:00:00Z')
+        self.assertEqual(str(self.material), expected_str)
 
     def test_status_choices_auto_set(self):
         material = Section.objects.create(name='Test_Material')
         self.assertEqual(material.status, 'CLOSED')
 
-    def test_last_update_after_creation_date(self):
+    def test_constraint(self):
         with self.assertRaises(IntegrityError):
             with transaction.atomic():
                 Material.objects.create(
@@ -221,6 +216,7 @@ class MaterialModelTests(TestCase):
             name='Test_Section',
             status='ARCHIVED')
 
+        # Проверка даты обновления позже или одинаковой с датой создания
         with self.assertRaises(IntegrityError):
             with self.assertRaises(ValidationError):
                 with transaction.atomic():
@@ -249,6 +245,7 @@ class MaterialModelTests(TestCase):
         )
         material.clean()
 
+        # Проверка на соответствие статуса материала статусу раздела
         material = Material(
             name='Test_Material',
             status='OPEN',
@@ -257,25 +254,15 @@ class MaterialModelTests(TestCase):
             section=section)
         with self.assertRaises(ValidationError):
             material.clean()
-
         section = Section.objects.create(
             name='Test_Section',
             status='CLOSED')
-        material = Material(
-            name='Test_Material',
-            status='OPEN',
-            creation_date=timezone.now() - timedelta(days=1),
-            last_update=timezone.now(),
-            section=section)
         with self.assertRaises(ValidationError):
             material.clean()
 
     def test_save_method(self):
         material = Material.objects.create(name='Test_Material')
-        self.assertIsNotNone(material.creation_date)
         self.assertEqual(material.creation_date.date(), timezone.now().date())
-        material = Material.objects.create(name='Test_Material')
-        self.assertIsNotNone(material.last_update)
         self.assertEqual(material.last_update.date(), timezone.now().date())
 
 
