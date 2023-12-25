@@ -10,13 +10,18 @@ from education.models import (Media, Section, Material, TestAnswer,
 
 
 class MediaModelTests(TestCase):
-
     maxDiff = None
 
     def setUp(self):
         self.media = Media.objects.create(
             name='Test_Media',
-            external_image='https://placehold.co/600x400/EEE/31343C'
+            creation_date='2023-01-01T00:00:00Z',
+            local_image='path/to/image.jpg',
+            external_image='https://example.com/image.jpg',
+            local_video='path/to/video.mp4',
+            external_video='https://example.com/video.mp4',
+            local_audio='path/to/audio.mp3',
+            external_audio='https://example.com/audio.mp3',
         )
 
     def tearDown(self):
@@ -26,53 +31,51 @@ class MediaModelTests(TestCase):
         media_count = Media.objects.count()
         self.assertEqual(media_count, 1)
         self.assertEqual(self.media.name, 'Test_Media')
-        self.assertEqual(self.media.external_image, 'https://placehold.co/600x400/EEE/31343C')
+        self.assertEqual(
+            first=self.media.external_image,
+            second='https://example.com/image.jpg')
 
     def test_str_representation(self):
-        media = Media(
-            name='Test_Media',
-            creation_date='2023-01-01T00:00:00Z',
-            local_image='path/to/image.jpg',
-            external_image='https://example.com/image.jpg',
-            local_video='path/to/video.mp4',
-            external_video='https://example.com/video.mp4',
-            local_audio='path/to/audio.mp3',
-            external_audio='https://example.com/audio.mp3'
-        )
         expected_str = ('Test_Media, 2023-01-01T00:00:00Z, '
                         'path/to/image.jpg, https://example.com/image.jpg, '
                         'path/to/video.mp4, https://example.com/video.mp4, '
                         'path/to/audio.mp3, https://example.com/audio.mp3')
-        self.assertEqual(str(media), expected_str)
+        self.assertEqual(str(self.media), expected_str)
 
     def test_one_media_selected(self):
+        # Медиафайл должен быть выбран
         media = Media(name='Test_Media')
         with self.assertRaises(ValidationError):
             media.clean()
 
-        media.local_image = 'path/to/image.jpg'
-        media.external_video = 'https://example.com/video.mp4'
+        # Ошибка при нескольких файлах
+        media = Media(
+            name='Test_Media',
+            local_image='path/to/image.jpg',
+            external_image='https://example.com/image.jpg',
+        )
+        with self.assertRaises(ValidationError):
+            media.clean()
+        media = Media(
+            name='Test_Media',
+            local_image='path/to/image.jpg',
+            local_video='path/to/video.mp4',
+        )
+        with self.assertRaises(ValidationError):
+            media.clean()
+        media = Media(
+            name='Test_Media',
+            local_image='path/to/image.jpg',
+            external_audio='https://example.com/audio.mp3',
+        )
         with self.assertRaises(ValidationError):
             media.clean()
 
-        media.local_image = ''
-        media.external_image = 'https://example.com/image.jpg'
-        with self.assertRaises(ValidationError):
-            media.clean()
-
-        media.external_image = ''
-        media.local_video = 'path/to/video.mp4'
-        with self.assertRaises(ValidationError):
-            media.clean()
-
-        media.local_video = ''
-        media.external_audio = 'https://example.com/audio.mp3'
-        with self.assertRaises(ValidationError):
-            media.clean()
-
-        media.external_audio = ''
-        media.external_video = ''
-        media.local_audio = 'path/to/audio.mp3'
+        # Выполнение метода без ошибок
+        media = Media(
+            name='Test_Media',
+            local_audio='path/to/audio.mp3',
+        )
         media.clean()
 
     def test_creation_date_auto_set(self):
