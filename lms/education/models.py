@@ -124,6 +124,13 @@ class Section(models.Model):
             )
         ]
 
+    def clean(self):
+        # Проверка даты обновления позже или одинаковой с датой создания
+        if self.last_update < self.creation_date:
+            raise models.ValidationError(
+                'Дата обновления не может быть раньше даты создания'
+            )
+
     def save(self, force_insert=False, force_update=False,
              using=None, update_fields=None, *args, **kwargs):
         # Автозапись даты создания
@@ -261,6 +268,13 @@ class Test(models.Model):
                 check=models.Q(last_update__gte=models.F('creation_date')),
             )
         ]
+
+    def clean(self):
+        # Проверка даты обновления позже или одинаковой с датой создания
+        if self.last_update < self.creation_date:
+            raise models.ValidationError(
+                'Дата обновления не может быть раньше даты создания'
+            )
 
     def save(self, force_insert=False, force_update=False,
              using=None, update_fields=None, *args, **kwargs):
