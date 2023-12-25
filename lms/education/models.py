@@ -116,6 +116,7 @@ class Section(models.Model):
         verbose_name_plural = 'разделы'
         ordering = 'name',
         constraints = [
+            # Проверка даты обновления позже или одинаковой с датой создания
             models.CheckConstraint(
                 name='%(app_label)s_%(class)s_last_update_after_creation_date',
                 check=models.Q(last_update__gte=models.F('creation_date')),
