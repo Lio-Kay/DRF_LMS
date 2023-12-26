@@ -3,17 +3,17 @@ from django.contrib import admin
 from accounts.models import CustomUser
 
 
-@admin.action(description='Активировать пользователя')
+@admin.action(description='Активировать выбранные элементы')
 def activate_user(modeladmin, request, queryset):
     queryset.update(is_active=True)
 
 
-@admin.action(description='Деактивировать пользователя')
+@admin.action(description='Деактивировать выбранные элементы')
 def deactivate_user(modeladmin, request, queryset):
     queryset.update(is_active=False)
 
 
-@admin.action(description='Сбросить аватар')
+@admin.action(description='Сбросить аватары выбранные элементы')
 def set_default_avatar(modeladmin, request, queryset):
     queryset.update(avatar='/path_to_default_avatar.jpg')
 
