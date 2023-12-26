@@ -96,8 +96,8 @@ class TestAnswerAdmin(admin.ModelAdmin):
 @admin.register(TestQuestion)
 class TestQuestionAdmin(admin.ModelAdmin):
     fields = 'question', ('answer', 'choices'), 'media',
-    list_display = 'id', 'question', 'answer_link', 'media',
-    list_display_links = 'id', 'question', 'media',
+    list_display = 'id', 'question', 'answer_link', 'media_names',
+    list_display_links = 'id', 'question',
     search_fields = 'question',
 
     def answer_link(self, obj):
@@ -110,6 +110,10 @@ class TestQuestionAdmin(admin.ModelAdmin):
         return link
 
     answer_link.short_description = 'Ответ'
+
+    @staticmethod
+    def media_names(obj):
+        return ', '.join([m.name for m in obj.media.all()])
 
 
 @admin.register(Test)
