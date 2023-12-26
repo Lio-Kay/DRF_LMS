@@ -18,10 +18,9 @@ class MediaAdmin(admin.ModelAdmin):
 
 @admin.register(Section)
 class SectionAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'description', 'status', 'creation_date',
-                    'last_update', 'base_price', 'media',)
-    list_display_links = ('id', 'description', 'creation_date', 'last_update',
-                          'media',)
+    list_display = ('id', 'name', 'status', 'creation_date', 'last_update',
+                    'base_price',)
+    list_display_links = ('id', 'creation_date', 'last_update',)
     list_filter = 'status',
     search_fields = 'name', 'creation_date', 'last_update',
     list_editable = 'name', 'status', 'base_price',
@@ -29,10 +28,9 @@ class SectionAdmin(admin.ModelAdmin):
 
 @admin.register(Material)
 class MaterialAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'text', 'status', 'creation_date',
-                    'last_update', 'media', 'section',)
-    list_display_links = ('id', 'text', 'creation_date', 'last_update',
-                          'media', 'section',)
+    list_display = ('id', 'name', 'status', 'creation_date', 'last_update',
+                    'section',)
+    list_display_links = ('id', 'creation_date', 'last_update', 'section',)
     list_filter = 'status', 'section',
     search_fields = 'name', 'creation_date', 'last_update',
     list_editable = 'name', 'status',
