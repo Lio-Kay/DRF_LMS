@@ -73,7 +73,7 @@ class Command(BaseCommand):
         section3 = Section.objects.create(
             name=fake.word(),
             description=fake.paragraph(),
-            status='CLOSED',
+            status='OPEN',
             creation_date=self.get_creation_time(),
             last_update=self.get_update_time(),
             base_price=Money(fake.random_int(min=100, max=10000), 'RUB')
@@ -90,6 +90,7 @@ class Command(BaseCommand):
             last_update=self.get_update_time(),
         )
         material1.section = section1
+        material1.save()
         material1.media.add(media1)
         material2 = Material.objects.create(
             name=fake.word(),
@@ -99,6 +100,7 @@ class Command(BaseCommand):
             last_update=self.get_update_time(),
         )
         material2.section = section1
+        material2.save()
         material2.media.add(media2)
         material3 = Material.objects.create(
             name=fake.word(),
@@ -108,6 +110,7 @@ class Command(BaseCommand):
             last_update=self.get_update_time(),
         )
         material3.section = section2
+        material3.save()
         material3.media.add(media3)
         material4 = Material.objects.create(
             name=fake.word(),
@@ -117,6 +120,7 @@ class Command(BaseCommand):
             last_update=self.get_update_time(),
         )
         material4.section = section2
+        material4.save()
         material4.media.add(media1)
         material5 = Material.objects.create(
             name=fake.word(),
@@ -126,6 +130,7 @@ class Command(BaseCommand):
             last_update=self.get_update_time(),
         )
         material5.section = section3
+        material5.save()
         material5.media.add(media2)
         material6 = Material.objects.create(
             name=fake.word(),
@@ -135,6 +140,7 @@ class Command(BaseCommand):
             last_update=self.get_update_time(),
         )
         material6.section = section3
+        material6.save()
         material6.media.add(media3)
 
         # TestAnswer
