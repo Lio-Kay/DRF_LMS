@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils import timezone
 
 from education.models import (Media, Section, Material, TestAnswer,
                               TestQuestion, Test)
@@ -20,6 +21,26 @@ class MediaAdmin(admin.ModelAdmin):
     list_editable = 'name',
 
 
+@admin.action(description='Обновить выбранные элементы')
+def set_last_update_now(modeladmin, request, queryset):
+    queryset.update(last_update=timezone.now())
+
+
+@admin.action(description='Архивировать выбранные элементы')
+def set_archived_status(modeladmin, request, queryset):
+    queryset.update(status='ARCHIVED')
+
+
+@admin.action(description='Закрыть выбранные элементы')
+def set_closed_status(modeladmin, request, queryset):
+    queryset.update(status='CLOSED')
+
+
+@admin.action(description='Открыть выбранные элементы')
+def set_open_status(modeladmin, request, queryset):
+    queryset.update(status='OPEN')
+
+
 @admin.register(Section)
 class SectionAdmin(admin.ModelAdmin):
     fields = (('name', 'status'),
@@ -32,20 +53,24 @@ class SectionAdmin(admin.ModelAdmin):
     list_filter = 'status',
     search_fields = 'name', 'creation_date', 'last_update',
     list_editable = 'name', 'status', 'base_price',
+    actions = (set_last_update_now, set_archived_status, set_closed_status,
+               set_open_status)
 
 
 @admin.register(Material)
 class MaterialAdmin(admin.ModelAdmin):
     fields = (('name', 'status'),
-              'text',
+              'section', 'text',
               ('creation_date', 'last_update'),
-              'media',)
+              'media', )
     list_display = ('id', 'name', 'status', 'creation_date', 'last_update',
                     'section',)
     list_display_links = ('id', 'creation_date', 'last_update', 'section',)
     list_filter = 'status', 'section',
     search_fields = 'name', 'creation_date', 'last_update',
     list_editable = 'name', 'status',
+    actions = (set_last_update_now, set_archived_status, set_closed_status,
+               set_open_status)
 
 
 @admin.register(TestAnswer)
@@ -69,3 +94,4 @@ class TestAdmin(admin.ModelAdmin):
     list_display = 'id', 'material', 'creation_date', 'last_update',
     list_display_links = 'id', 'material', 'creation_date', 'last_update',
     search_fields = 'material', 'creation_date', 'last_update',
+    actions = set_last_update_now,
