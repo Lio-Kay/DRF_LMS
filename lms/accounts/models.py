@@ -55,14 +55,16 @@ class CustomUser(AbstractUser):
     email = models.EmailField(
         unique=True, verbose_name='Email')
     first_name = models.CharField(
-        max_length=50, verbose_name='Имя')
+        max_length=50, verbose_name='Имя',
+        help_text='Не более 50 символов')
     last_name = models.CharField(
-        max_length=50, verbose_name='Фамилия')
+        max_length=50, verbose_name='Фамилия',
+        help_text='Не более 50 символов')
     age = models.PositiveSmallIntegerField(
         **NULLABLE, verbose_name='Возраст', validators=[
             MinValueValidator(12),
             MaxValueValidator(120)
-        ]
+        ], help_text='Значение от 12 до 120'
     )
     gender_choices = [
         ('MALE', 'Мужчина'),
@@ -75,7 +77,8 @@ class CustomUser(AbstractUser):
     phone = PhoneNumberField(
         **NULLABLE, verbose_name='Телефон')
     city = models.CharField(
-        **NULLABLE, default='Не указан', max_length=100, verbose_name='Город')
+        **NULLABLE, default='Не указан', max_length=100, verbose_name='Город',
+        help_text='Не более 100 символов')
     avatar = models.ImageField(
         **NULLABLE, default='/path_to_default_avatar.jpg',
         upload_to='users/media/avatars/', verbose_name='Аватар', validators=[
