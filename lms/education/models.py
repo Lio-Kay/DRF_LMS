@@ -5,6 +5,7 @@ from djmoney.models.fields import MoneyField
 
 from education.apps import EducationConfig
 
+
 app_name = EducationConfig.name
 
 NULLABLE = {'blank': True, 'null': True}
@@ -13,26 +14,33 @@ NULLABLE = {'blank': True, 'null': True}
 class Media(models.Model):
     """Модель медиа"""
     name = models.CharField(
-        max_length=100, verbose_name='Название')
+        max_length=100, verbose_name='Название',
+        help_text='Не более 100 символов')
 
     creation_date = models.DateTimeField(
         **NULLABLE, verbose_name='Дата создания')
 
     local_image = models.ImageField(
         **NULLABLE, upload_to='education/media/images/%Y/%m%d/',
-        verbose_name='Локальное изображение')
+        verbose_name='Локальное изображение',
+        help_text='Только одно поле может быть выбрано')
     external_image = models.URLField(
-        **NULLABLE, verbose_name='Внешнее изображение')
+        **NULLABLE, verbose_name='Внешнее изображение',
+        help_text='Только одно поле может быть выбрано')
     local_video = models.FileField(
         **NULLABLE, upload_to='education/media/videos/%Y/%m%d/',
-        verbose_name='Локальное видео')
+        verbose_name='Локальное видео',
+        help_text='Только одно поле может быть выбрано')
     external_video = models.URLField(
-        **NULLABLE, verbose_name='Внешнее видео')
+        **NULLABLE, verbose_name='Внешнее видео',
+        help_text='Только одно поле может быть выбрано')
     local_audio = models.FileField(
         **NULLABLE, upload_to='education/media/audios/%Y/%m%d/',
-        verbose_name='Локальное аудио')
+        verbose_name='Локальное аудио',
+        help_text='Только одно поле может быть выбрано')
     external_audio = models.URLField(
-        **NULLABLE, verbose_name='Внешнее аудио')
+        **NULLABLE, verbose_name='Внешнее аудио',
+        help_text='Только одно поле может быть выбрано')
 
     def __str__(self):
         fields = [self.name]
@@ -82,7 +90,8 @@ class Media(models.Model):
 class Section(models.Model):
     """Модель раздела"""
     name = models.CharField(
-        max_length=100, verbose_name='Название')
+        max_length=100, verbose_name='Название',
+        help_text='Не более 100 символов')
     description = models.TextField(
         verbose_name='Описание')
     status_choices = [
@@ -97,7 +106,8 @@ class Section(models.Model):
     creation_date = models.DateTimeField(
         **NULLABLE, verbose_name='Дата создания')
     last_update = models.DateTimeField(
-        **NULLABLE, verbose_name='Дата последнего обновления')
+        **NULLABLE, verbose_name='Дата последнего обновления',
+        help_text='Дата обновления должна быть больше даты создания')
 
     base_price = MoneyField(
         max_digits=14, decimal_places=2, default=0, default_currency='RUB',
@@ -145,7 +155,8 @@ class Section(models.Model):
 class Material(models.Model):
     """Модель материала"""
     name = models.CharField(
-        max_length=100, verbose_name='Название')
+        max_length=100, verbose_name='Название',
+        help_text='Не более 100 символов')
     text = models.TextField(
         **NULLABLE, verbose_name='Текст')
     status_choices = [
@@ -160,7 +171,8 @@ class Material(models.Model):
     creation_date = models.DateTimeField(
         **NULLABLE, verbose_name='Дата создания')
     last_update = models.DateTimeField(
-        **NULLABLE, verbose_name='Дата последнего обновления')
+        **NULLABLE, verbose_name='Дата последнего обновления',
+        help_text='Дата обновления должна быть больше даты создания')
 
     media = models.ManyToManyField(
         blank=True, to=Media, related_name='material_media')
@@ -213,7 +225,8 @@ class Material(models.Model):
 class TestAnswer(models.Model):
     """Модель ответа на вопрос теста"""
     answer = models.CharField(
-        max_length=1_000, verbose_name='Выбор варианта ответа')
+        max_length=1_000, verbose_name='Выбор варианта ответа',
+        help_text='Не более 1000 символов')
 
     def __str__(self):
         return f'Answer: {self.answer}'
@@ -256,7 +269,8 @@ class Test(models.Model):
     creation_date = models.DateTimeField(
         **NULLABLE, verbose_name='Дата создания')
     last_update = models.DateTimeField(
-        **NULLABLE, verbose_name='Дата последнего обновления')
+        **NULLABLE, verbose_name='Дата последнего обновления',
+        help_text='Дата обновления должна быть больше даты создания')
 
     def __str__(self):
         question_list = ', '.join(
