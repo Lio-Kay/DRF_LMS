@@ -96,9 +96,20 @@ class TestAnswerAdmin(admin.ModelAdmin):
 @admin.register(TestQuestion)
 class TestQuestionAdmin(admin.ModelAdmin):
     fields = 'question', ('answer', 'choices'), 'media',
-    list_display = 'id', 'question', 'answer', 'media',
-    list_display_links = 'id', 'question', 'answer', 'media',
+    list_display = 'id', 'question', 'answer_link', 'media',
+    list_display_links = 'id', 'question', 'media',
     search_fields = 'question',
+
+    def answer_link(self, obj):
+        try:
+            link = mark_safe('<a href="{}">{}</a>'.format(
+                reverse('admin:education_testanswer_change',
+                        args=(obj.answer.pk,)), obj.answer.answer))
+        except AttributeError:
+            link = ''
+        return link
+
+    answer_link.short_description = 'Ответ'
 
 
 @admin.register(Test)
