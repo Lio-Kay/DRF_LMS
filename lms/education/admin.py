@@ -1,5 +1,7 @@
 from django.contrib import admin
 from django.utils import timezone
+from django.urls import reverse
+from django.utils.safestring import mark_safe
 
 from education.models import (Media, Section, Material, TestAnswer,
                               TestQuestion, Test)
@@ -64,13 +66,24 @@ class MaterialAdmin(admin.ModelAdmin):
               ('creation_date', 'last_update'),
               'media', )
     list_display = ('id', 'name', 'status', 'creation_date', 'last_update',
-                    'section',)
-    list_display_links = ('id', 'creation_date', 'last_update', 'section',)
+                    'section_link',)
+    list_display_links = ('id', 'creation_date', 'last_update',)
     list_filter = 'status', 'section',
     search_fields = 'name', 'creation_date', 'last_update',
     list_editable = 'name', 'status',
     actions = (set_last_update_now, set_archived_status, set_closed_status,
                set_open_status)
+
+    def section_link(self, obj):
+        try:
+            link = mark_safe('<a href="{}">{}</a>'.format(
+                reverse('admin:education_section_change',
+                        args=(obj.section.pk,)), obj.section.name))
+        except AttributeError:
+            link = ''
+        return link
+
+    section_link.short_description = 'Раздел'
 
 
 @admin.register(TestAnswer)
