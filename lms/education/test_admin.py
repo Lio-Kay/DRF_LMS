@@ -17,43 +17,34 @@ class AdminActionsTests(TestCase):
     def setUp(self):
         self.admin_site = AdminSite()
         self.section_admin = SectionAdmin(Section, self.admin_site)
+        self.section = Section.objects.create(name='Test_Section')
 
     def test_set_last_update_now(self):
-        section = Section.objects.create(name='Test Section')
-        queryset = Section.objects.filter(pk=section.pk)
-
+        queryset = Section.objects.filter(pk=self.section.pk)
         set_last_update_now(None, None, queryset)
-        section.refresh_from_db()
-
-        self.assertAlmostEqual(section.last_update, timezone.now(),
+        self.section.refresh_from_db()
+        self.assertAlmostEqual(self.section.last_update, timezone.now(),
                                delta=timezone.timedelta(seconds=1))
 
     def test_set_archived_status(self):
-        section = Section.objects.create(name='Test Section',
-                                         status='OPEN')
-        queryset = Section.objects.filter(pk=section.pk)
-
+        self.section.status = 'OPEN'
+        queryset = Section.objects.filter(pk=self.section.pk)
         set_archived_status(None, None, queryset)
-        section.refresh_from_db()
-
-        self.assertEqual(section.status, 'ARCHIVED')
+        self.section.refresh_from_db()
+        self.assertEqual(self.section.status, 'ARCHIVED')
 
     def test_set_closed_status(self):
-        section = Section.objects.create(name='Test Section',
-                                         status='OPEN')
-        queryset = Section.objects.filter(pk=section.pk)
-
+        self.section.status = 'OPEN'
+        queryset = Section.objects.filter(pk=self.section.pk)
         set_closed_status(None, None, queryset)
-        section.refresh_from_db()
-
-        self.assertEqual(section.status, 'CLOSED')
+        self.section.refresh_from_db()
+        self.assertEqual(self.section.status, 'CLOSED')
 
     def test_set_open_status(self):
-        section = Section.objects.create(name='Test Section',
-                                         status='CLOSED')
-        queryset = Section.objects.filter(pk=section.pk)
-
+        self.section.status = 'CLOSED'
+        queryset = Section.objects.filter(pk=self.section.pk)
         set_open_status(None, None, queryset)
-        section.refresh_from_db()
+        self.section.refresh_from_db()
+        self.assertEqual(self.section.status, 'OPEN')
 
         self.assertEqual(section.status, 'OPEN')
