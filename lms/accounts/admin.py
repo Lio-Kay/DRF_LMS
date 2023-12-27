@@ -13,7 +13,7 @@ def deactivate_user(modeladmin, request, queryset):
     queryset.update(is_active=False)
 
 
-@admin.action(description='Сбросить аватары выбранные элементы')
+@admin.action(description='Сбросить аватары выбранных элементов')
 def set_default_avatar(modeladmin, request, queryset):
     queryset.update(avatar='/path_to_default_avatar.jpg')
 
