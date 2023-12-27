@@ -47,4 +47,17 @@ class AdminActionsTests(TestCase):
         self.section.refresh_from_db()
         self.assertEqual(self.section.status, 'OPEN')
 
-        self.assertEqual(section.status, 'OPEN')
+
+class MaterialAdminTests(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.admin_site = AdminSite()
+        self.material_admin = MaterialAdmin(Material, self.admin_site)
+        self.material = Material.objects.create(name='Test_Material')
+        self.section = Section.objects.create(name='Test_Section')
+        self.material.section = self.section
+
+    def test_section_link_without_section(self):
+        link = self.material_admin.section_link(self.material)
+        self.assertEqual(link, '<a href="/admin/education/'
+                               'section/1/change/">Test_Section</a>')
