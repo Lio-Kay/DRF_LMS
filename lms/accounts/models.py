@@ -1,12 +1,11 @@
-from django.db import models
-from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.base_user import BaseUserManager
+from django.contrib.auth.models import AbstractUser
 from django.core.validators import (MinValueValidator, MaxValueValidator,
                                     validate_image_file_extension)
+from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 
 from accounts.apps import AccountsConfig
-
 
 app_name = AccountsConfig.name
 

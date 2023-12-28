@@ -4,9 +4,12 @@ from django.utils import timezone
 from education.models import (Media, Section, Material, TestAnswer,
                               TestQuestion)
 from education.serializers import (MediaLinkSerializer,
-                                   MaterialListSerializer, MaterialRetrieveSerializer,
-                                   SectionListSerializer, SectionRetrieveSerializer,
-                                   TestAnswerSerializer, TestQuestionSerializer)
+                                   MaterialListSerializer,
+                                   MaterialRetrieveSerializer,
+                                   SectionListSerializer,
+                                   SectionRetrieveSerializer,
+                                   TestAnswerSerializer,
+                                   TestQuestionSerializer)
 
 
 class MediaLinkSerializerTest(TestCase):

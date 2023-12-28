@@ -1,14 +1,12 @@
-from django.test import TestCase, RequestFactory
 from django.contrib.admin.sites import AdminSite
 from django.contrib.auth import get_user_model
+from django.test import TestCase, RequestFactory
 from django.utils import timezone
-from django.urls import reverse
 
 from education.admin import (SectionAdmin, MaterialAdmin, set_last_update_now,
                              set_archived_status, set_closed_status,
                              set_open_status)
 from education.models import Section, Material
-
 
 User = get_user_model()
 

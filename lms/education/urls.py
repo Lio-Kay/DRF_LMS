@@ -5,7 +5,6 @@ from education.views import (SectionsListAPIView, SectionsRetrieveAPIView,
                              MaterialsListAPIView, MaterialsRetrieveAPIView,
                              StartTest)
 
-
 app_name = EducationConfig.name
 
 urlpatterns = [

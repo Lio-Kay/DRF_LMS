@@ -1,6 +1,6 @@
 from django.contrib import admin
-from django.utils import timezone
 from django.urls import reverse
+from django.utils import timezone
 from django.utils.safestring import mark_safe
 
 from education.models import (Media, Section, Material, TestAnswer,

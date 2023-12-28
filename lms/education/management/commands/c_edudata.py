@@ -3,10 +3,8 @@ from django.utils.timezone import make_aware
 from djmoney.money import Money
 from faker import Faker
 
-
 from education.models import (Media, Section, Material, TestAnswer,
                               TestQuestion, Test)
-
 
 fake = Faker('ru_RU')
 

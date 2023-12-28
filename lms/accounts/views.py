@@ -1,7 +1,7 @@
 import requests
 from django.conf import settings
-from django.shortcuts import redirect
 from django.contrib.auth import get_user_model
+from django.shortcuts import redirect
 from rest_framework.views import APIView
 
 # Get the UserModel

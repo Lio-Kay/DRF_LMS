@@ -1,9 +1,10 @@
 from datetime import timedelta
-from django.test import TestCase
+
 from django.core.exceptions import ValidationError
-from django.utils import timezone
 from django.db import transaction
 from django.db.utils import IntegrityError
+from django.test import TestCase
+from django.utils import timezone
 
 from education.models import (Media, Section, Material, TestAnswer,
                               TestQuestion, Test)

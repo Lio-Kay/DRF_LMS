@@ -1,11 +1,11 @@
+from dj_rest_auth.registration.serializers import RegisterSerializer
+from dj_rest_auth.serializers import LoginSerializer
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.utils.translation import gettext_lazy as _
 from django.urls import exceptions as url_exceptions
-from rest_framework import serializers, exceptions
-from dj_rest_auth.serializers import LoginSerializer
-from dj_rest_auth.registration.serializers import RegisterSerializer
+from django.utils.translation import gettext_lazy as _
 from phonenumber_field.serializerfields import PhoneNumberField
+from rest_framework import serializers, exceptions
 
 try:
     from allauth.account import app_settings as allauth_account_settings

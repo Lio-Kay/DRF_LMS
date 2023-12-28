@@ -1,7 +1,8 @@
+from collections import OrderedDict
+
 from django.test import TestCase
 from django.urls import reverse
 from rest_framework import status, test
-from collections import OrderedDict
 
 from education.models import Test, Material, TestQuestion, TestAnswer
 from education.serializers import TestQuestionSerializer

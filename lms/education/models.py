@@ -1,10 +1,9 @@
-from django.db import models
 from django.core.exceptions import ValidationError
+from django.db import models
 from django.utils import timezone
 from djmoney.models.fields import MoneyField
 
 from education.apps import EducationConfig
-
 
 app_name = EducationConfig.name
 
