@@ -253,7 +253,7 @@ class TestQuestion(models.Model):
         verbose_name='Медиа')
 
     def __str__(self):
-        return f'Вопрос: {self.question}, Ответ: {self.answer}'
+        return f'Вопрос: {self.question}, Ответ: {self.answer.answer}'
 
     class Meta:
         verbose_name = 'вопрос на тест'
