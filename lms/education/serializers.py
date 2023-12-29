@@ -47,7 +47,8 @@ class MaterialRetrieveSerializer(serializers.ModelSerializer):
 
 
 class SectionListSerializer(serializers.ModelSerializer):
-    materials_count = serializers.IntegerField(source='material_section.all.count')
+    materials_count = serializers.IntegerField(
+        source='material_section.all.count')
     media_links = MediaLinkSerializer(source='media', many=True)
 
     class Meta:

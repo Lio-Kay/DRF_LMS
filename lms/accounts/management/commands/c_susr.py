@@ -28,6 +28,6 @@ class Command(BaseCommand):
         user.save()
 
         self.stdout.write(self.style.SUCCESS(
-            f'Создали суперпользователя. Email: admin@admin.com, '
+            'Создали суперпользователя. Email: admin@admin.com, '
             'Phone: +1234567890, Password: admin')
         )

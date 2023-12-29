@@ -37,7 +37,8 @@ class StartTestAPIViewTest(TestCase):
         self.test.delete()
 
     def test_start_test_get_existing_test(self):
-        url = reverse('education:material_test', kwargs={'pk': self.material.pk})
+        url = reverse('education:material_test',
+                      kwargs={'pk': self.material.pk})
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         serializer = TestQuestionSerializer(

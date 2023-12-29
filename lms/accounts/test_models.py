@@ -4,7 +4,6 @@ from django.test import TestCase
 
 from accounts.models import CustomUser
 
-# Get the UserModel
 UserModel = get_user_model()
 
 
@@ -29,7 +28,8 @@ class CustomUserManagerTest(TestCase):
             self.manager.create_user('testuser@example.com', None)
 
     def test_create_superuser(self):
-        user = self.manager.create_superuser('admin@example.com', 'password123')
+        user = self.manager.create_superuser('admin@example.com',
+                                             'password123')
         self.assertEqual(user.email, 'admin@example.com')
         self.assertTrue(user.check_password('password123'))
         self.assertTrue(user.is_staff)
@@ -38,11 +38,13 @@ class CustomUserManagerTest(TestCase):
 
     def test_create_superuser_no_staff(self):
         with self.assertRaises(ValueError):
-            self.manager.create_superuser('admin@example.com', 'password123', is_staff=False)
+            self.manager.create_superuser('admin@example.com',
+                                          'password123', is_staff=False)
 
     def test_create_superuser_no_superuser(self):
         with self.assertRaises(ValueError):
-            self.manager.create_superuser('admin@example.com', 'password123', is_superuser=False)
+            self.manager.create_superuser('admin@example.com',
+                                          'password123', is_superuser=False)
 
 
 class CustomUserTest(TestCase):
@@ -72,7 +74,8 @@ class CustomUserTest(TestCase):
         self.assertTrue(self.user.check_password('password123'))
 
     def test_str_representation(self):
-        self.assertEqual(str(self.user), "('testuser@example.com', 'Test', 'User')")
+        self.assertEqual(str(self.user),
+                         "('testuser@example.com', 'Test', 'User')")
 
     def test_age_validation(self):
         with self.assertRaises(ValidationError):

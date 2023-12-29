@@ -199,4 +199,4 @@ class Command(BaseCommand):
         test3.question.add(testquestion3)
 
         self.stdout.write(self.style.SUCCESS(
-            f'Добавили данные для приложения education'))
+            'Добавили данные для приложения education'))

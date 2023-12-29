@@ -4,7 +4,6 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import redirect
 from rest_framework.views import APIView
 
-# Get the UserModel
 UserModel = get_user_model()
 
 

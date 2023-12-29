@@ -17,7 +17,6 @@ except ImportError:
 
 NULLABLE = {'allow_null': True, 'allow_blank': True}
 
-# Get the UserModel
 UserModel = get_user_model()
 
 

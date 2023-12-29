@@ -58,8 +58,9 @@ class MaterialAdminTests(TestCase):
 
     def test_section_link(self):
         link = self.material_admin.section_link(self.material)
-        expected_link = (f'<a href="/admin/education/section/{self.section.pk}'
-                         f'/change/">Название: Test_Section. Статус: Закрытый</a>')
+        expected_link = (f'<a href="/admin/education/section/'
+                         f'{self.section.pk}/change/">'
+                         f'Название: Test_Section. Статус: Закрытый</a>')
         self.assertEqual(link, expected_link)
 
     def test_empty_section_link(self):
@@ -73,18 +74,20 @@ class TestQuestionAdminTests(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
         self.admin_site = AdminSite()
-        self.testquestion_admin = TestQuestionAdmin(TestQuestion, self.admin_site)
+        self.testquestion_admin = TestQuestionAdmin(
+            TestQuestion, self.admin_site)
         self.answer1 = TestAnswer.objects.create(answer='Test_Answer1')
         self.answer2 = TestAnswer.objects.create(answer='Test_Answer2')
-        self.testquestion = TestQuestion.objects.create(question='Test_Question',
-                                                        answer=self.answer1)
+        self.testquestion = TestQuestion.objects.create(
+            question='Test_Question', answer=self.answer1)
         self.testquestion.choices.add(self.answer1)
         self.testquestion.choices.add(self.answer2)
 
     def test_answer_link(self):
         link = self.testquestion_admin.answer_link(self.testquestion)
-        expected_link = (f'<a href="/admin/education/testanswer/{self.testquestion.pk}'
-                         f'/change/">Test_Answer1</a>')
+        expected_link = (f'<a href="/admin/education/testanswer/'
+                         f'{self.testquestion.pk}/change/">'
+                         f'Test_Answer1</a>')
         self.assertEqual(link, expected_link)
 
     def test_empty_answer_link(self):
