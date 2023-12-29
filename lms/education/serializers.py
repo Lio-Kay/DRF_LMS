@@ -12,7 +12,8 @@ class MediaLinkSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Media
-        fields = ('local_image', 'external_image',
+        fields = ('name',
+                  'local_image', 'external_image',
                   'local_video', 'external_video',
                   'local_audio', 'external_audio',)
 
