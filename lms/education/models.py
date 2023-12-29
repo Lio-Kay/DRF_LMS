@@ -113,7 +113,8 @@ class Section(models.Model):
         verbose_name='Базовая цена')
 
     media = models.ManyToManyField(
-        blank=True, to=Media, related_name='section_media')
+        blank=True, to=Media, related_name='section_media',
+        verbose_name='Медиа')
 
     def __str__(self):
         return (f'Name: {self.name}, Status: {self.status}, '
@@ -174,10 +175,11 @@ class Material(models.Model):
         help_text='Дата обновления должна быть больше даты создания')
 
     media = models.ManyToManyField(
-        blank=True, to=Media, related_name='material_media')
+        blank=True, to=Media, related_name='material_media',
+        verbose_name='Медиа')
     section = models.ForeignKey(
         **NULLABLE, to=Section, on_delete=models.SET_NULL,
-        related_name='material_section')
+        related_name='material_section', verbose_name='Раздел')
 
     def __str__(self):
         return (f'Name: {self.name}, Status: {self.status}, '
@@ -242,11 +244,13 @@ class TestQuestion(models.Model):
         verbose_name='Вопрос')
     answer = models.OneToOneField(
         to=TestAnswer, on_delete=models.CASCADE,
-        related_name='testquestion_answer')
+        related_name='testquestion_answer', verbose_name='Ответ')
     choices = models.ManyToManyField(
-        to=TestAnswer, related_name='testquestion_choices')
+        to=TestAnswer, related_name='testquestion_choices',
+        verbose_name='Варианты ответа')
     media = models.ManyToManyField(
-        blank=True, to=Media, related_name='testquestion_media')
+        blank=True, to=Media, related_name='testquestion_media',
+        verbose_name='Медиа')
 
     def __str__(self):
         return f'Question: {self.question}, {self.answer}'
@@ -261,9 +265,10 @@ class Test(models.Model):
     """Модель теста"""
     material = models.OneToOneField(
         **NULLABLE, to=Material, on_delete=models.CASCADE,
-        related_name='test_material')
+        related_name='test_material', verbose_name='Материал')
     question = models.ManyToManyField(
-        to=TestQuestion, related_name='test_question')
+        to=TestQuestion, related_name='test_question',
+        verbose_name='Вопрос')
 
     creation_date = models.DateTimeField(
         **NULLABLE, verbose_name='Дата создания')
