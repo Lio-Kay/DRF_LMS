@@ -18,12 +18,9 @@ class MediaLinkSerializerTest(TestCase):
 
     def setUp(self):
         self.media = Media.objects.create(
-            local_image='/image.jpg',
-            external_image='https://example.com/image.jpg',
-            local_video='/video.mp4',
-            external_video='https://example.com/video.mp4',
+            pk=1,
+            name='Test_Media',
             local_audio='/audio.mp3',
-            external_audio='https://example.com/audio.mp3',
         )
 
     def tearDown(self):
@@ -32,18 +29,16 @@ class MediaLinkSerializerTest(TestCase):
     def test_to_representation(self):
         serializer = MediaLinkSerializer(instance=self.media)
         expected_data = {
-            'local_image': '/image.jpg',
-            'external_image': 'https://example.com/image.jpg',
-            'local_video': '/video.mp4',
-            'external_video': 'https://example.com/video.mp4',
+            'pk': 1,
+            'name': 'Test_Media',
             'local_audio': '/audio.mp3',
-            'external_audio': 'https://example.com/audio.mp3',
         }
         self.assertEqual(serializer.data, expected_data)
 
     def test_meta_fields(self):
         serializer = MediaLinkSerializer()
-        expected_fields = ('local_image', 'external_image',
+        expected_fields = ('pk', 'name',
+                           'local_image', 'external_image',
                            'local_video', 'external_video',
                            'local_audio', 'external_audio',)
         self.assertEqual(serializer.Meta.model, Media)
