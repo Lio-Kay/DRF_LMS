@@ -3,10 +3,11 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase, RequestFactory
 from django.utils import timezone
 
-from education.admin import (SectionAdmin, MaterialAdmin, set_last_update_now,
+from education.admin import (SectionAdmin, MaterialAdmin, TestQuestionAdmin,
+                             set_last_update_now,
                              set_archived_status, set_closed_status,
                              set_open_status)
-from education.models import Section, Material
+from education.models import Section, Material, TestAnswer, TestQuestion
 
 User = get_user_model()
 
@@ -64,5 +65,30 @@ class MaterialAdminTests(TestCase):
     def test_empty_section_link(self):
         self.material.section = None
         link = self.material_admin.section_link(self.material)
+        expected_link = ''
+        self.assertEqual(link, expected_link)
+
+
+class TestQuestionAdminTests(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.admin_site = AdminSite()
+        self.testquestion_admin = TestQuestionAdmin(TestQuestion, self.admin_site)
+        self.answer1 = TestAnswer.objects.create(answer='Test_Answer1')
+        self.answer2 = TestAnswer.objects.create(answer='Test_Answer2')
+        self.testquestion = TestQuestion.objects.create(question='Test_Question',
+                                                        answer=self.answer1)
+        self.testquestion.choices.add(self.answer1)
+        self.testquestion.choices.add(self.answer2)
+
+    def test_answer_link(self):
+        link = self.testquestion_admin.answer_link(self.testquestion)
+        expected_link = (f'<a href="/admin/education/testanswer/{self.testquestion.pk}'
+                         f'/change/">Test_Answer1</a>')
+        self.assertEqual(link, expected_link)
+
+    def test_empty_answer_link(self):
+        self.testquestion.answer = None
+        link = self.testquestion_admin.answer_link(self.testquestion)
         expected_link = ''
         self.assertEqual(link, expected_link)
