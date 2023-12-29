@@ -12,7 +12,7 @@ class MediaLinkSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Media
-        fields = ('name',
+        fields = ('pk', 'name',
                   'local_image', 'external_image',
                   'local_video', 'external_video',
                   'local_audio', 'external_audio',)
@@ -27,7 +27,7 @@ class MaterialListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Material
-        fields = ('name', 'section', 'status',
+        fields = ('pk', 'name', 'section', 'status',
                   'creation_date', 'last_update',
                   'media_links',)
 
@@ -41,7 +41,7 @@ class MaterialRetrieveSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Material
-        fields = ('name', 'section', 'status', 'text',
+        fields = ('pk', 'name', 'section', 'status', 'text',
                   'creation_date', 'last_update',
                   'media_links',)
 
@@ -52,7 +52,7 @@ class SectionListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Section
-        fields = ('name', 'status', 'creation_date', 'last_update',
+        fields = ('pk', 'name', 'status', 'creation_date', 'last_update',
                   'materials_count', 'base_price',
                   'media_links',)
 
@@ -67,7 +67,7 @@ class SectionRetrieveSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Section
-        fields = ('name', 'status', 'description',
+        fields = ('pk', 'name', 'status', 'description',
                   'creation_date', 'last_update', 'base_price',
                   'materials', 'media_links',)
 
@@ -90,4 +90,4 @@ class TestQuestionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TestQuestion
-        fields = 'question', 'choices',
+        fields = 'pk', 'question', 'choices',
