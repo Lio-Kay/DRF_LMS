@@ -267,6 +267,6 @@ class TestQuestionSerializerTest(TestCase):
 
     def test_meta_fields(self):
         serializer = TestQuestionSerializer()
-        expected_fields = ('question', 'choices',)
+        expected_fields = ('pk', 'question', 'choices',)
         self.assertEqual(serializer.Meta.model, TestQuestion)
         self.assertEqual(serializer.Meta.fields, expected_fields)
