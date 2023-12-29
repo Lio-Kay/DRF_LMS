@@ -78,7 +78,9 @@ class MaterialAdmin(admin.ModelAdmin):
         try:
             link = mark_safe('<a href="{}">{}</a>'.format(
                 reverse('admin:education_section_change',
-                        args=(obj.section.pk,)), obj.section.name))
+                        args=(obj.section.pk,)),
+                f'Название: {obj.section.name}. '
+                f'Статус: {obj.section.status.replace("OPEN", "Открытый").replace("CLOSED", "Закрытый").replace("ARCHIVED", "Архивированный")}'))
         except AttributeError:
             link = ''
         return link
