@@ -58,7 +58,7 @@ class MaterialAdminTests(TestCase):
     def test_section_link(self):
         link = self.material_admin.section_link(self.material)
         expected_link = (f'<a href="/admin/education/section/{self.section.pk}'
-                         f'/change/">Test_Section</a>')
+                         f'/change/">Название: Test_Section. Статус: Закрытый</a>')
         self.assertEqual(link, expected_link)
 
     def test_empty_section_link(self):
