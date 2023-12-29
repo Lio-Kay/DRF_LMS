@@ -10,8 +10,9 @@ fake = Faker('ru_RU')
 
 
 class Command(BaseCommand):
-    """Команда для наполнения всех моделей приложения education"""
-    help = 'Создает данные для приложения education'
+    """Команда для удаления всех данных из education и
+     наполнения всех моделей при помощи библиотеки Faker"""
+    help = 'Удаляет все данные из education, и заполняет БД новыми данными'
 
     @staticmethod
     def get_creation_time():
