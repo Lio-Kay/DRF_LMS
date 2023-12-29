@@ -42,7 +42,7 @@ class Media(models.Model):
         help_text='Только одно поле может быть выбрано')
 
     def __str__(self):
-        media_links = [self.name]
+        media_links = []
         if self.local_image:
             media_links.append(str(self.local_image))
         if self.external_image:
