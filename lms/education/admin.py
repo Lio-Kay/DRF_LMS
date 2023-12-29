@@ -113,9 +113,10 @@ class TestQuestionAdmin(admin.ModelAdmin):
 
     answer_link.short_description = 'Ответ'
 
-    @staticmethod
-    def media_names(obj):
+    def media_names(self, obj):
         return ', '.join([m.name for m in obj.media.all()])
+
+    media_names.short_description = 'Медиа'
 
 
 @admin.register(Test)
