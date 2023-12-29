@@ -42,23 +42,23 @@ class Media(models.Model):
         help_text='Только одно поле может быть выбрано')
 
     def __str__(self):
-        fields = [self.name]
-        if self.creation_date:
-            fields.append(str(self.creation_date))
+        media_links = [self.name]
         if self.local_image:
-            fields.append(str(self.local_image))
+            media_links.append(str(self.local_image))
         if self.external_image:
-            fields.append(self.external_image)
+            media_links.append(self.external_image)
         if self.local_video:
-            fields.append(str(self.local_video))
+            media_links.append(str(self.local_video))
         if self.external_video:
-            fields.append(self.external_video)
+            media_links.append(self.external_video)
         if self.local_audio:
-            fields.append(str(self.local_audio))
+            media_links.append(str(self.local_audio))
         if self.external_audio:
-            fields.append(self.external_audio)
+            media_links.append(self.external_audio)
 
-        return ', '.join(fields)
+        return (f'Название: {self.name}, '
+                f'Дата создания: {self.creation_date}, '
+                f'Медиа: {", ".join(media_links)}')
 
     class Meta:
         verbose_name = 'медиа'
@@ -117,9 +117,9 @@ class Section(models.Model):
         verbose_name='Медиа')
 
     def __str__(self):
-        return (f'Name: {self.name}, Status: {self.status}, '
-                f'Created: {self.creation_date}, '
-                f'Base price: {self.base_price}')
+        return (f'Имя: {self.name}, Статус: {self.status}, '
+                f'Дата создания: {self.creation_date}, '
+                f'Базовая цена: {self.base_price}')
 
     class Meta:
         verbose_name = 'раздел'
@@ -182,8 +182,8 @@ class Material(models.Model):
         related_name='material_section', verbose_name='Раздел')
 
     def __str__(self):
-        return (f'Name: {self.name}, Status: {self.status}, '
-                f'Created: {self.creation_date}')
+        return (f'Имя: {self.name}, Статус: {self.status}, '
+                f'Дата создания: {self.creation_date}')
 
     class Meta:
         verbose_name = 'материал'
@@ -230,7 +230,7 @@ class TestAnswer(models.Model):
         help_text='Не более 1000 символов')
 
     def __str__(self):
-        return f'Answer: {self.answer}'
+        return f'Ответ: {self.answer}'
 
     class Meta:
         verbose_name = 'ответ на тест'
@@ -253,7 +253,7 @@ class TestQuestion(models.Model):
         verbose_name='Медиа')
 
     def __str__(self):
-        return f'Question: {self.question}, {self.answer}'
+        return f'Вопрос: {self.question}, Ответ: {self.answer}'
 
     class Meta:
         verbose_name = 'вопрос на тест'
@@ -279,7 +279,7 @@ class Test(models.Model):
     def __str__(self):
         question_list = ', '.join(
             [str(question.question) for question in self.question.all()])
-        return f'Question: {question_list}, Created: {self.creation_date}'
+        return f'Вопрос: {question_list}, Дата создания: {self.creation_date}'
 
     class Meta:
         verbose_name = 'тест'
