@@ -17,12 +17,7 @@ class MediaModelTests(TestCase):
         self.media = Media.objects.create(
             name='Test_Media',
             creation_date='2023-01-01T00:00:00Z',
-            local_image='path/to/image.jpg',
             external_image='https://example.com/image.jpg',
-            local_video='path/to/video.mp4',
-            external_video='https://example.com/video.mp4',
-            local_audio='path/to/audio.mp3',
-            external_audio='https://example.com/audio.mp3',
         )
 
     def tearDown(self):
@@ -37,10 +32,9 @@ class MediaModelTests(TestCase):
             'https://example.com/image.jpg')
 
     def test_str_representation(self):
-        expected_str = ('Test_Media, 2023-01-01T00:00:00Z, '
-                        'path/to/image.jpg, https://example.com/image.jpg, '
-                        'path/to/video.mp4, https://example.com/video.mp4, '
-                        'path/to/audio.mp3, https://example.com/audio.mp3')
+        expected_str = ('Название: Test_Media, '
+                        'Дата создания: 2023-01-01T00:00:00Z, '
+                        'Медиа: https://example.com/image.jpg')
         self.assertEqual(str(self.media), expected_str)
 
     def test_clean_method(self):
@@ -111,9 +105,9 @@ class SectionModelTests(TestCase):
         self.assertIn(self.media, self.section.media.all())
 
     def test_str_representation(self):
-        expected_str = ('Name: Test_Section, Status: OPEN, '
-                        'Created: 2023-01-01T00:00:00Z, '
-                        'Base price: 100,00\xa0₽')
+        expected_str = ('Название: Test_Section, Статус: OPEN, '
+                        'Дата создания: 2023-01-01T00:00:00Z, '
+                        'Базовая цена: 100,00\xa0₽')
         self.assertEqual(str(self.section), expected_str)
 
     def test_status_choices_auto_set(self):
@@ -194,9 +188,9 @@ class MaterialModelTests(TestCase):
         self.assertIn(self.media, self.material.media.all())
 
     def test_str_representation(self):
-        expected_str = ('Name: Test_Material, '
-                        'Status: CLOSED, Created: '
-                        '2023-01-01T00:00:00Z')
+        expected_str = ('Название: Test_Material, '
+                        'Статус: CLOSED, '
+                        'Дата создания: 2023-01-01T00:00:00Z')
         self.assertEqual(str(self.material), expected_str)
 
     def test_status_choices_auto_set(self):
@@ -281,7 +275,7 @@ class TestAnswerModelTests(TestCase):
         self.assertEqual(self.answer.answer, 'Test_Answer')
 
     def test_str_representation(self):
-        expected_str = 'Answer: Test_Answer'
+        expected_str = 'Ответ: Test_Answer'
         self.assertEqual(str(self.answer), expected_str)
 
 
@@ -311,7 +305,7 @@ class TestQuestionModelTests(TestCase):
         self.assertIn(self.media, self.testquestion.media.all())
 
     def test_str_representation(self):
-        expected_str = 'Question: Test_Question, Answer: Test_Answer1'
+        expected_str = 'Вопрос: Test_Question, Ответ: Test_Answer1'
         self.assertEqual(str(self.testquestion), expected_str)
 
 
@@ -349,7 +343,7 @@ class TestModelTests(TestCase):
         self.assertEqual(self.test.question.first().answer.answer, 'Answer1')
 
     def test_str_representation(self):
-        expected_str = 'Question: Question, Created: 2023-01-01T00:00:00Z'
+        expected_str = 'Вопрос: Question, Дата создания: 2023-01-01T00:00:00Z'
         self.assertEqual(str(self.test), expected_str)
 
     def test_constraint(self):
