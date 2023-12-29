@@ -71,16 +71,11 @@ class MaterialListSerializerTest(TestCase):
         expected_section = 'Section_1'
         self.assertEqual(serializer.data['section'], expected_section)
 
-    def test_get_media_names(self):
-        serializer = MaterialListSerializer(instance=self.material)
-        expected_media_name = 'Media_1'
-        self.assertEqual(serializer.data['media_names'][0], expected_media_name)
-
     def test_meta_fields(self):
         serializer = MaterialListSerializer()
-        expected_fields = ('name', 'section', 'status',
+        expected_fields = ('pk', 'name', 'section', 'status',
                            'creation_date', 'last_update',
-                           'media_names', 'media_links',)
+                           'media_links',)
         self.assertEqual(serializer.Meta.model, Material)
         self.assertEqual(serializer.Meta.fields, expected_fields)
 
