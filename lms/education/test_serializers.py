@@ -148,16 +148,12 @@ class SectionListSerializerTest(TestCase):
         self.media.delete()
         self.material.delete()
 
-    def test_get_media_names(self):
-        serializer = SectionListSerializer(instance=self.section)
-        expected_media_names = ['Media_1']
-        self.assertEqual(list(serializer.data['media_names']), expected_media_names)
-
     def test_meta_fields(self):
         serializer = SectionListSerializer()
-        expected_fields = ('name', 'status', 'creation_date', 'last_update',
+        expected_fields = ('pk', 'name', 'status',
+                           'creation_date', 'last_update',
                            'materials_count', 'base_price',
-                           'media_names', 'media_links',)
+                           'media_links',)
         self.assertEqual(serializer.Meta.model, Section)
         self.assertEqual(serializer.Meta.fields, expected_fields)
 
