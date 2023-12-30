@@ -19,23 +19,23 @@ class CustomLoginSerializerTest(TestCase):
             user=self.user,
             email=self.user.email,
             verified=True,)
-        self.client = APIClient()
-
-    def test_validate(self):
-        data = {
+        self.data = {
             'email': 'testuser@example.com',
             'password': 'password123',
             'phone': '+12345678900'
         }
+        self.client = APIClient()
+
+    def test_validate(self):
         # Успешный вход
         response = self.client.post(
-            '/api/v1/dj-rest-auth/login/', data, format='json')
+            '/api/v1/dj-rest-auth/login/', self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn('access', response.data)
         # Ошибка
-        data['password'] = 'wrongpassword'
+        self.data['password'] = 'wrongpassword'
         response_invalid_credentials = self.client.post(
-            '/api/v1/dj-rest-auth/login/', data, format='json')
+            '/api/v1/dj-rest-auth/login/', self.data, format='json')
         self.assertEqual(response_invalid_credentials.status_code,
                          status.HTTP_400_BAD_REQUEST)
         self.assertIn('Невозможно войти в систему с '
