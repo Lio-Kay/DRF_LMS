@@ -34,6 +34,8 @@ urlpatterns = [
 
     path('admin/', admin.site.urls),
 
+    path('api/v1/accounts/',
+         include('accounts.urls', namespace='accounts')),
     path('api/v1/education/',
-         include('education.urls', namespace='education'))
+         include('education.urls', namespace='education')),
 ]
