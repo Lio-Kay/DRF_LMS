@@ -1,14 +1,15 @@
-from dj_rest_auth.registration.serializers import RegisterSerializer
 from django.conf import settings
 from django.contrib.auth import get_user_model, authenticate
 from django.urls import exceptions as url_exceptions
 from django.utils.translation import gettext_lazy as _
 from phonenumber_field.serializerfields import PhoneNumberField
 from rest_framework import serializers, exceptions
+from django.core.exceptions import ValidationError
 
 try:
     from allauth.account import app_settings as allauth_account_settings
     from allauth.account.adapter import get_adapter
+    from allauth.socialaccount.models import SocialAccount, EmailAddress
     from allauth.account.utils import setup_user_email
 except ImportError:
     raise ImportError('allauth needs to be added to INSTALLED_APPS.')
@@ -100,33 +101,68 @@ class CustomLoginSerializer(serializers.Serializer):
         return attrs
 
 
-class CustomRegisterSerializer(RegisterSerializer):
-    username = None
+class CustomRegisterSerializer(serializers.Serializer):
+    """
+    Кастомный RegisterSerializer с расширенной поддержкой полей регистрации
+    """
     email = serializers.EmailField(
         required=allauth_account_settings.EMAIL_REQUIRED,
         help_text='Электронная почта')
-    password1 = serializers.CharField(write_only=True, help_text='Пароль')
-    password2 = serializers.CharField(write_only=True, help_text='Подтверждение пароля')
-    first_name = serializers.CharField(max_length=50, help_text='Имя')
-    last_name = serializers.CharField(max_length=50, help_text='Фамилия')
-    age = serializers.IntegerField(allow_null=True, required=False,
-                                   min_value=12, max_value=120,
-                                   help_text='Возраст, от 12 до 120 лет')
+    password1 = serializers.CharField(
+        write_only=True, help_text='Пароль')
+    password2 = serializers.CharField(
+        write_only=True, help_text='Подтверждение пароля')
+    first_name = serializers.CharField(
+        max_length=50, help_text='Имя')
+    last_name = serializers.CharField(
+        max_length=50, help_text='Фамилия')
+    age = serializers.IntegerField(
+        allow_null=True, required=False, min_value=12, max_value=120,
+        help_text='Возраст, от 12 до 120 лет')
     gender_choices = [
         ('MALE', 'Мужчина'),
         ('FEMALE', 'Женщина'),
         ('OTHER', 'Предпочитаю не указывать'),
     ]
-    gender = serializers.ChoiceField(**NULLABLE, required=False,
-                                     choices=gender_choices, initial='OTHER',
-                                     help_text='Гендер')
-    phone = PhoneNumberField(**NULLABLE, required=False,
-                             help_text='Номер телефона')
-    city = serializers.CharField(**NULLABLE, required=False,
-                                 initial='Не указан', max_length=100,
-                                 help_text='Город проживания')
-    avatar = serializers.ImageField(allow_null=True, required=False,
-                                    help_text='Фото профиля')
+    gender = serializers.ChoiceField(
+        **NULLABLE, required=False, choices=gender_choices, initial='OTHER',
+        help_text='Гендер')
+    phone = PhoneNumberField(
+        **NULLABLE, required=False, help_text='Номер телефона')
+    city = serializers.CharField(
+        **NULLABLE, required=False, initial='Не указан', max_length=100,
+        help_text='Город проживания')
+    avatar = serializers.ImageField(
+        allow_null=True, required=False, help_text='Фото профиля')
+
+    def validate_email(self, email):
+        email = get_adapter().clean_email(email)
+        if allauth_account_settings.UNIQUE_EMAIL:
+            if email and EmailAddress.objects.is_verified(email):
+                raise serializers.ValidationError(
+                    _('A user is already registered with '
+                      'this e-mail address.'),
+                )
+        return email
+
+    def validate_password1(self, password):
+        return get_adapter().clean_password(password)
+
+    def validate(self, data):
+        if data['password1'] != data['password2']:
+            raise serializers.ValidationError(_('The two password '
+                                                'fields didn\'t match.'))
+        return data
+
+    def custom_signup(self, request, user):
+        # По умолчанию django-allauth не позволяет сохранять кастомные поля
+        user.age = self.cleaned_data.get('age')
+        user.gender = self.cleaned_data.get('gender')
+        user.phone = self.cleaned_data.get('phone')
+        user.city = self.cleaned_data.get('city')
+        user.avatar = self.cleaned_data.get('avatar')
+        user.save()
+        return user
 
     def get_cleaned_data(self):
         return {
@@ -142,12 +178,20 @@ class CustomRegisterSerializer(RegisterSerializer):
             'password2': self.validated_data.get('password2', ''),
         }
 
-    def custom_signup(self, request, user):
-        # By default, django-allauth does not permit the preservation of custom fields
-        user.age = self.cleaned_data.get('age')
-        user.gender = self.cleaned_data.get('gender')
-        user.phone = self.cleaned_data.get('phone')
-        user.city = self.cleaned_data.get('city')
-        user.avatar = self.cleaned_data.get('avatar')
+    def save(self, request):
+        adapter = get_adapter()
+        user = adapter.new_user(request)
+        self.cleaned_data = self.get_cleaned_data()
+        user = adapter.save_user(request, user, self, commit=False)
+        if "password1" in self.cleaned_data:
+            try:
+                adapter.clean_password(
+                    self.cleaned_data['password1'], user=user)
+            except ValidationError as exc:
+                raise serializers.ValidationError(
+                    detail=serializers.as_serializer_error(exc)
+                )
         user.save()
+        self.custom_signup(request, user)
+        setup_user_email(request, user, [])
         return user
