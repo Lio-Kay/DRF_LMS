@@ -20,8 +20,6 @@ from drf_spectacular.views import (SpectacularAPIView,
                                    SpectacularRedocView,
                                    SpectacularSwaggerView)
 
-from accounts.views import VerifyEmailAPIView
-
 urlpatterns = [
     path('api/v1/schema/',
          SpectacularAPIView.as_view(),
@@ -35,16 +33,6 @@ urlpatterns = [
          name='redoc'),
 
     path('admin/', admin.site.urls),
-
-    path('api/v1/dj-rest-auth/',
-         include('dj_rest_auth.urls')),
-    path('api/v1/dj-rest-auth/registration/verify-email/',
-         include('dj_rest_auth.registration.urls')),
-    path('api/v1/dj-rest-auth/registration/account-confirm-email/<str:key>/',
-         VerifyEmailAPIView.as_view(),
-         name='account_confirm_email'),
-    path('api/v1/dj-rest-auth/registration/',
-         include('dj_rest_auth.registration.urls')),
 
     path('api/v1/education/',
          include('education.urls', namespace='education'))
