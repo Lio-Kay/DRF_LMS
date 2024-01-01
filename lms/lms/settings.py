@@ -222,6 +222,64 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
 
+# Djoser
+# https://djoser.readthedocs.io/en/latest/settings.html
+DJOSER = {
+    'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
+    'USERNAME_RESET_CONFIRM_URL': '#/username/reset/confirm/{uid}/{token}',
+    'SEND_ACTIVATION_EMAIL': True,
+    'SEND_CONFIRMATION_EMAIL': True,
+    'ACTIVATION_URL': '#/activate/{uid}/{token}',
+    'USER_CREATE_PASSWORD_RETYPE': True,
+    'PASSWORD_RESET_CONFIRM_RETYPE': True,
+    'SERIALIZERS': {
+        'activation': 'djoser.serializers.ActivationSerializer',
+        'password_reset': 'djoser.serializers.SendEmailResetSerializer',
+        'password_reset_confirm': 'djoser.serializers.PasswordResetConfirmSerializer',
+        'password_reset_confirm_retype': 'djoser.serializers.PasswordResetConfirmRetypeSerializer',
+        'set_password': 'djoser.serializers.SetPasswordSerializer',
+        'set_password_retype': 'djoser.serializers.SetPasswordRetypeSerializer',
+        'set_username': 'djoser.serializers.SetUsernameSerializer',
+        'set_username_retype': 'djoser.serializers.SetUsernameRetypeSerializer',
+        'username_reset': 'djoser.serializers.SendEmailResetSerializer',
+        'username_reset_confirm': 'djoser.serializers.UsernameResetConfirmSerializer',
+        'username_reset_confirm_retype': 'djoser.serializers.UsernameResetConfirmRetypeSerializer',
+        'user_create': 'djoser.serializers.UserCreateSerializer',
+        'user_create_password_retype': 'djoser.serializers.UserCreatePasswordRetypeSerializer',
+        'user_delete': 'djoser.serializers.UserDeleteSerializer',
+        'user': 'djoser.serializers.UserSerializer',
+        'current_user': 'djoser.serializers.UserSerializer',
+        'token': 'djoser.serializers.TokenSerializer',
+        'token_create': 'djoser.serializers.TokenCreateSerializer',
+    },
+    'EMAIL': {
+        'activation': 'djoser.email.ActivationEmail',
+        'confirmation': 'djoser.email.ConfirmationEmail',
+        'password_reset': 'djoser.email.PasswordResetEmail',
+        'password_changed_confirmation': 'djoser.email.PasswordChangedConfirmationEmail',
+        'username_changed_confirmation': 'djoser.email.UsernameChangedConfirmationEmail',
+        'username_reset': 'djoser.email.UsernameResetEmail',
+    },
+    'CONSTANTS': {
+        'messages': 'djoser.constants.Messages',
+    },
+    'PERMISSIONS': {
+        'activation': ['rest_framework.permissions.AllowAny'],
+        'password_reset': ['rest_framework.permissions.AllowAny'],
+        'password_reset_confirm': ['rest_framework.permissions.AllowAny'],
+        'set_password': ['djoser.permissions.CurrentUserOrAdmin'],
+        'username_reset': ['rest_framework.permissions.AllowAny'],
+        'username_reset_confirm': ['rest_framework.permissions.AllowAny'],
+        'set_username': ['djoser.permissions.CurrentUserOrAdmin'],
+        'user_create': ['rest_framework.permissions.AllowAny'],
+        'user_delete': ['djoser.permissions.CurrentUserOrAdmin'],
+        'user': ['djoser.permissions.CurrentUserOrAdmin'],
+        'user_list': ['djoser.permissions.CurrentUserOrAdmin'],
+        'token_create': ['rest_framework.permissions.AllowAny'],
+        'token_destroy': ['rest_framework.permissions.IsAuthenticated'],
+    }
+}
+
 # CORS
 CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = [
