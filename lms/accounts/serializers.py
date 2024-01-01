@@ -12,6 +12,9 @@ User = get_user_model()
 
 
 class UserCreateMixin:
+    """
+    Миксин для UserCreateSerializer
+    """
     def create(self, validated_data):
         try:
             user = self.perform_create(validated_data)
@@ -29,6 +32,10 @@ class UserCreateMixin:
 
 
 class UserCreateSerializer(UserCreateMixin, serializers.ModelSerializer):
+    """
+    Сериализатор регистрации нового пользователя
+    #/users
+    """
     password = serializers.CharField(
         style={'input_type': 'password'}, write_only=True, label='Пароль')
     re_password = serializers.CharField(
@@ -49,62 +56,70 @@ class UserCreateSerializer(UserCreateMixin, serializers.ModelSerializer):
                   'age', 'gender', 'city', 'avatar',)
 
     def validate(self, attrs):
-        self.fields.pop("re_password", None)
-        re_password = attrs.pop("re_password")
+        self.fields.pop('re_password', None)
+        re_password = attrs.pop('re_password')
         user = User(**attrs)
-        password = attrs.get("password")
+        password = attrs.get('password')
 
         try:
             validate_password(password, user)
         except django_exceptions.ValidationError as e:
             serializer_error = serializers.as_serializer_error(e)
             raise serializers.ValidationError(
-                {"password":
+                {'password':
                      serializer_error[api_settings.NON_FIELD_ERRORS_KEY]}
             )
-        if attrs["password"] == re_password:
+        if attrs['password'] == re_password:
             return attrs
-        self.fail("password_mismatch")
+        self.fail('password_mismatch')
 
 
 class UidAndTokenSerializer(serializers.Serializer):
+    """
+    Сериализатор для ввода ID и токена верификации
+    #/users/activation/
+    """
     uid = serializers.CharField(label='ID пользователя')
     token = serializers.CharField(label='Токен верификации')
 
     default_error_messages = {
-        "invalid_token": settings.CONSTANTS.messages.INVALID_TOKEN_ERROR,
-        "invalid_uid": settings.CONSTANTS.messages.INVALID_UID_ERROR,
+        'invalid_token': settings.CONSTANTS.messages.INVALID_TOKEN_ERROR,
+        'invalid_uid': settings.CONSTANTS.messages.INVALID_UID_ERROR,
     }
 
     def validate(self, attrs):
         validated_data = super().validate(attrs)
-
         # uid validation have to be here, because validate_<field_name>
         # doesn't work with modelserializer
         try:
-            uid = utils.decode_uid(self.initial_data.get("uid", ""))
+            uid = utils.decode_uid(self.initial_data.get('uid', ''))
             self.user = User.objects.get(pk=uid)
         except (User.DoesNotExist, ValueError, TypeError, OverflowError):
-            key_error = "invalid_uid"
+            key_error = 'invalid_uid'
             raise ValidationError(
-                {"uid": [self.error_messages[key_error]]}, code=key_error
+                {'uid': [self.error_messages[key_error]]},
+                code=key_error
             )
-
-        is_token_valid = self.context["view"].token_generator.check_token(
-            self.user, self.initial_data.get("token", "")
+        is_token_valid = self.context['view'].token_generator.check_token(
+            self.user, self.initial_data.get('token', '')
         )
         if is_token_valid:
             return validated_data
         else:
-            key_error = "invalid_token"
+            key_error = 'invalid_token'
             raise ValidationError(
-                {"token": [self.error_messages[key_error]]}, code=key_error
+                {'token': [self.error_messages[key_error]]},
+                code=key_error
             )
 
 
 class ActivationSerializer(UidAndTokenSerializer):
+    """
+    Сериализатор для активации нового пользователя данными из письма
+    #/users/activation/
+    """
     default_error_messages = {
-        "stale_token": settings.CONSTANTS.messages.STALE_TOKEN_ERROR
+        'stale_token': settings.CONSTANTS.messages.STALE_TOKEN_ERROR
     }
 
     def validate(self, attrs):
@@ -112,3 +127,4 @@ class ActivationSerializer(UidAndTokenSerializer):
         if not self.user.is_active:
             return attrs
         raise exceptions.PermissionDenied(self.error_messages["stale_token"])
+        raise exceptions.PermissionDenied(self.error_messages['stale_token'])
