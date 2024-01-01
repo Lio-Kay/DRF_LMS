@@ -39,7 +39,7 @@ class UserCreateSerializer(UserCreateMixin, serializers.ModelSerializer):
     password = serializers.CharField(
         style={'input_type': 'password'}, write_only=True, label='Пароль')
     re_password = serializers.CharField(
-        style={"input_type": "password"}, write_only=True,
+        style={'input_type': 'password'}, write_only=True,
         label='Повторите пароль')
 
     default_error_messages = {
@@ -126,5 +126,57 @@ class ActivationSerializer(UidAndTokenSerializer):
         attrs = super().validate(attrs)
         if not self.user.is_active:
             return attrs
-        raise exceptions.PermissionDenied(self.error_messages["stale_token"])
         raise exceptions.PermissionDenied(self.error_messages['stale_token'])
+
+
+class PasswordSerializer(serializers.Serializer):
+    """
+    Сериализатор нового пароля активированного пользователя
+    """
+    new_password = serializers.CharField(
+        style={'input_type': 'password'}, label='Новый пароль')
+
+    def validate(self, attrs):
+        user = getattr(self, 'user', None) or self.context['request'].user
+        # why assert? There are ValidationError / fail everywhere
+        assert user is not None
+
+        try:
+            validate_password(attrs['new_password'], user)
+        except django_exceptions.ValidationError as e:
+            raise serializers.ValidationError(
+                {'new_password': list(e.messages)})
+        return super().validate(attrs)
+
+
+class PasswordRetypeSerializer(PasswordSerializer):
+    """
+    Сериализатор добавления поля повторения пароля
+
+    Расширяет сериализатор PasswordSerializer, добавляя проверку
+    соответствия паролей
+    """
+    re_new_password = serializers.CharField(
+        style={'input_type': 'password'}, label='Повторите пароль')
+
+    default_error_messages = {
+        'password_mismatch':
+            settings.CONSTANTS.messages.PASSWORD_MISMATCH_ERROR
+    }
+
+    def validate(self, attrs):
+        attrs = super().validate(attrs)
+        if attrs['new_password'] == attrs['re_new_password']:
+            return attrs
+        else:
+            self.fail('password_mismatch')
+
+
+class PasswordResetConfirmRetypeSerializer(UidAndTokenSerializer,
+                                           PasswordRetypeSerializer):
+    """
+    Сериализатор объединяющий ввод ID и токена верификации и пароля с проверкой
+
+    #users/reset_password_confirm/
+    """
+    pass
