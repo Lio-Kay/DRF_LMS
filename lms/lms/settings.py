@@ -233,7 +233,7 @@ DJOSER = {
     'USER_CREATE_PASSWORD_RETYPE': True,
     'PASSWORD_RESET_CONFIRM_RETYPE': True,
     'SERIALIZERS': {
-        'activation': 'djoser.serializers.ActivationSerializer',
+        'activation': 'accounts.serializers.ActivationSerializer',
         'password_reset': 'djoser.serializers.SendEmailResetSerializer',
         'password_reset_confirm': 'djoser.serializers.PasswordResetConfirmSerializer',
         'password_reset_confirm_retype': 'djoser.serializers.PasswordResetConfirmRetypeSerializer',
