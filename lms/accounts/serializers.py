@@ -14,7 +14,12 @@ User = get_user_model()
 
 
 class CustomUserSerializer(UserSerializer):
-    pass
+    class Meta:
+        model = User
+        fields = ('email', 'phone',
+                  'first_name', 'last_name',
+                  'age', 'gender', 'city', 'avatar',)
+        read_only_fields = (settings.LOGIN_FIELD, 'phone',)
 
 
 class CustomUserCreateSerializer(UserCreateMixin, serializers.ModelSerializer):
