@@ -4,7 +4,7 @@ from django.core import exceptions as django_exceptions
 from djoser.conf import settings
 from djoser.serializers import (UserCreateMixin, UidAndTokenSerializer,
                                 ActivationSerializer, PasswordSerializer,
-                                PasswordRetypeSerializer)
+                                PasswordRetypeSerializer, TokenCreateSerializer)
 from rest_framework import serializers
 from rest_framework.settings import api_settings
 
@@ -14,7 +14,8 @@ User = get_user_model()
 class CustomUserCreateSerializer(UserCreateMixin, serializers.ModelSerializer):
     """
     Сериализатор регистрации нового пользователя
-    #/users
+
+    #/users/
     """
     password = serializers.CharField(
         style={'input_type': 'password'}, write_only=True, label='Пароль')
@@ -52,6 +53,16 @@ class CustomUserCreateSerializer(UserCreateMixin, serializers.ModelSerializer):
         if attrs['password'] == re_password:
             return attrs
         self.fail('password_mismatch')
+
+
+class CustomTokenCreateSerializer(TokenCreateSerializer):
+    """
+    Сериализатор для получения DRF токена
+
+    #token/login/
+    """
+    password = serializers.CharField(
+        required=False, style={"input_type": "password"}, label='Пароль')
 
 
 class CustomUidAndTokenSerializer(UidAndTokenSerializer):

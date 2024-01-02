@@ -250,7 +250,7 @@ DJOSER = {
         'user': 'djoser.serializers.UserSerializer',
         'current_user': 'djoser.serializers.UserSerializer',
         'token': 'djoser.serializers.TokenSerializer',
-        'token_create': 'djoser.serializers.TokenCreateSerializer',
+        'token_create': 'accounts.serializers.CustomTokenCreateSerializer',
     },
     'EMAIL': {
         'activation': 'djoser.email.ActivationEmail',
