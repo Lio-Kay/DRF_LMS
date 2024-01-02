@@ -14,6 +14,23 @@ User = get_user_model()
 
 
 class CustomUserSerializer(UserSerializer):
+    """
+    Сериализатор пользователя
+
+    Возвращает поля пользователя/пользователей
+    email = models.EmailField()
+    first_name = models.CharField()
+    last_name = models.CharField()
+    age = models.PositiveSmallIntegerField()
+    gender = models.CharField()
+    phone = PhoneNumberField()
+    city = models.CharField()
+    avatar = models.ImageField()
+
+    #/users/ [name='customuser-list']
+    #/users/<pk>/ [name='customuser-detail']
+    #/users/me/ [name='customuser-me']
+    """
     class Meta:
         model = User
         fields = ('email', 'phone',
@@ -71,7 +88,7 @@ class CustomUserCreateSerializer(UserCreateMixin, serializers.ModelSerializer):
             serializer_error = serializers.as_serializer_error(e)
             raise serializers.ValidationError(
                 {'password':
-                     serializer_error[api_settings.NON_FIELD_ERRORS_KEY]}
+                    serializer_error[api_settings.NON_FIELD_ERRORS_KEY]}
             )
         if attrs['password'] == re_password:
             return attrs
@@ -89,7 +106,7 @@ class CustomTokenCreateSerializer(TokenCreateSerializer):
     #token/login/ [name='login']
     """
     password = serializers.CharField(
-        required=False, style={"input_type": "password"}, label='Пароль')
+        required=False, style={'input_type': 'password'}, label='Пароль')
 
 
 class CustomUidAndTokenSerializer(UidAndTokenSerializer):
@@ -152,8 +169,18 @@ class CustomTokenSerializer(TokenSerializer):
         source='key', label='Токен аутентификации')
 
 
-class CustomSetPasswordRetypeSerializer(CustomPasswordRetypeSerializer,
-                                        CustomCurrentPasswordSerializer):
+class CustomSetPasswordRetypeSerializer(CustomCurrentPasswordSerializer,
+                                        CustomPasswordRetypeSerializer):
+    """
+    Сериализатор изменения пароля зарегистрированного пользователя
+
+    Возвращает поля для заполнения:
+    current_password = serializers.CharField()
+    new_password = serializers.CharField()
+    re_new_password = serializers.CharField()
+
+    #users/set_password/  [name='customuser-set-password']
+    """
     pass
 
 
@@ -174,4 +201,12 @@ class CustomPasswordResetConfirmRetypeSerializer(CustomUidAndTokenSerializer,
 
 
 class CustomUserDeleteSerializer(CustomCurrentPasswordSerializer):
+    """
+    Сериализатор удаления зарегистрированного пользователя
+
+    Возвращает поля для заполнения:
+    current_password = serializers.CharField()
+
+    #users/me/ [name='customuser-me']
+    """
     pass
