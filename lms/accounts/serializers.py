@@ -4,7 +4,8 @@ from django.core import exceptions as django_exceptions
 from djoser.conf import settings
 from djoser.serializers import (UserCreateMixin, UidAndTokenSerializer,
                                 ActivationSerializer, PasswordSerializer,
-                                PasswordRetypeSerializer, TokenCreateSerializer)
+                                PasswordRetypeSerializer,
+                                TokenCreateSerializer, TokenSerializer)
 from rest_framework import serializers
 from rest_framework.settings import api_settings
 
@@ -101,6 +102,12 @@ class CustomPasswordRetypeSerializer(CustomPasswordSerializer,
     """
     re_new_password = serializers.CharField(
         style={'input_type': 'password'}, label='Повторите пароль')
+
+
+class CustomTokenSerializer(TokenSerializer):
+    auth_token = serializers.CharField(
+        source='key', label='Токен аутентификации')
+
 
 
 class CustomPasswordResetConfirmRetypeSerializer(CustomUidAndTokenSerializer,

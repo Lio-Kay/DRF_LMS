@@ -246,7 +246,7 @@ DJOSER = {
         'user_delete': 'djoser.serializers.UserDeleteSerializer',
         'user': 'djoser.serializers.UserSerializer',
         'current_user': 'djoser.serializers.UserSerializer',
-        'token': 'djoser.serializers.TokenSerializer',
+        'token': 'accounts.serializers.CustomTokenSerializer',
         'token_create': 'accounts.serializers.CustomTokenCreateSerializer',
         # Not used
         # 'password_reset_confirm': 'djoser.serializers.PasswordResetConfirmSerializer',
@@ -272,7 +272,7 @@ DJOSER = {
         # Not used since USERNAME_FIELD = 'email'
         'username_reset': ['rest_framework.permissions.IsAdminUser'],
         'username_reset_confirm': ['rest_framework.permissions.IsAdminUser'],
-        'set_username': ['djoser.permissions.IsAdminUser'],
+        'set_username': ['rest_framework.permissions.IsAdminUser'],
 
         'user_create': ['rest_framework.permissions.AllowAny'],
         'user_delete': ['djoser.permissions.CurrentUserOrAdmin'],
