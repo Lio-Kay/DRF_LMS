@@ -2,22 +2,38 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
 from django.core import exceptions as django_exceptions
 from djoser.conf import settings
-from djoser.serializers import (UserCreateMixin, UidAndTokenSerializer,
+from djoser.serializers import (UserSerializer, UserCreateMixin,
+                                TokenCreateSerializer, UidAndTokenSerializer,
                                 ActivationSerializer, PasswordSerializer,
                                 PasswordRetypeSerializer,
-                                TokenCreateSerializer, TokenSerializer,
-                                CurrentPasswordSerializer)
+                                CurrentPasswordSerializer, TokenSerializer)
 from rest_framework import serializers
 from rest_framework.settings import api_settings
 
 User = get_user_model()
 
 
+class CustomUserSerializer(UserSerializer):
+    pass
+
+
 class CustomUserCreateSerializer(UserCreateMixin, serializers.ModelSerializer):
     """
     Сериализатор регистрации нового пользователя
 
-    #/users/
+    Возвращает поля для заполнения:
+    email = models.EmailField()
+    first_name = models.CharField()
+    last_name = models.CharField()
+    age = models.PositiveSmallIntegerField()
+    gender = models.CharField()
+    phone = PhoneNumberField()
+    city = models.CharField()
+    avatar = models.ImageField()
+    password = serializers.CharField()
+    re_password = serializers.CharField()
+
+    #/users/ [name='customuser-list']
     """
     password = serializers.CharField(
         style={'input_type': 'password'}, write_only=True, label='Пароль')
@@ -61,7 +77,11 @@ class CustomTokenCreateSerializer(TokenCreateSerializer):
     """
     Сериализатор для получения DRF токена
 
-    #token/login/
+    Возвращает поля для заполнения:
+    password = serializers.CharField()
+    email = models.EmailField()
+
+    #token/login/ [name='login']
     """
     password = serializers.CharField(
         required=False, style={"input_type": "password"}, label='Пароль')
@@ -80,7 +100,11 @@ class CustomActivationSerializer(CustomUidAndTokenSerializer,
     """
     Сериализатор для активации нового пользователя данными из письма
 
-    #/users/activation/
+    Возвращает поля для заполнения:
+    uid = serializers.CharField()
+    token = serializers.CharField()
+
+    #/users/activation/ [name='customuser-activation']
     """
     pass
 
@@ -97,20 +121,28 @@ class CustomPasswordRetypeSerializer(CustomPasswordSerializer,
                                      PasswordRetypeSerializer):
     """
     Сериализатор добавления поля повторения пароля
-
-    Расширяет сериализатор PasswordSerializer, добавляя проверку
-    соответствия паролей
     """
     re_new_password = serializers.CharField(
         style={'input_type': 'password'}, label='Повторите пароль')
 
 
 class CustomCurrentPasswordSerializer(CurrentPasswordSerializer):
+    """
+    Сериализатор текущего пароля зарегистрированного пользователя
+    """
     current_password = serializers.CharField(
         style={'input_type': 'password'}, label='Пароль')
 
 
 class CustomTokenSerializer(TokenSerializer):
+    """
+    Сериализатор полученного DRF токена
+
+    Возвращает поле с значением DRF токена
+    auth_token = serializers.CharField()
+
+    #token/login/ [name='login']
+    """
     auth_token = serializers.CharField(
         source='key', label='Токен аутентификации')
 
@@ -123,8 +155,18 @@ class CustomSetPasswordRetypeSerializer(CustomPasswordRetypeSerializer,
 class CustomPasswordResetConfirmRetypeSerializer(CustomUidAndTokenSerializer,
                                                  CustomPasswordRetypeSerializer):
     """
-    Сериализатор объединяющий ввод ID и токена верификации и пароля с проверкой
+    Сериализатор сброса пароля зарегистрированного пользователя
 
-    #users/reset_password_confirm/
+    Возвращает поля для заполнения:
+    uid = serializers.CharField()
+    token = serializers.CharField()
+    new_password = serializers.CharField()
+    re_new_password = serializers.CharField()
+
+    #users/reset_password_confirm/ [name='customuser-reset-password-confirm']
     """
+    pass
+
+
+class CustomUserDeleteSerializer(CustomCurrentPasswordSerializer):
     pass

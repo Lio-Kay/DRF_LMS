@@ -238,9 +238,9 @@ DJOSER = {
         'password_reset_confirm_retype': 'accounts.serializers.CustomPasswordResetConfirmRetypeSerializer',
         'set_password_retype': 'accounts.serializers.CustomSetPasswordRetypeSerializer',
         'user_create_password_retype': 'accounts.serializers.CustomUserCreateSerializer',
-        'user_delete': 'djoser.serializers.UserDeleteSerializer',
-        'user': 'djoser.serializers.UserSerializer',
-        'current_user': 'djoser.serializers.UserSerializer',
+        'user_delete': 'accounts.serializers.CustomUserDeleteSerializer',
+        'user': 'accounts.serializers.CustomUserSerializer',
+        'current_user': 'accounts.serializers.CustomUserSerializer',
         'token': 'accounts.serializers.CustomTokenSerializer',
         'token_create': 'accounts.serializers.CustomTokenCreateSerializer',
         # Not used
