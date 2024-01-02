@@ -37,6 +37,7 @@ ADMINS = [
 INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'education.apps.EducationConfig',
+    'telegram.apps.TelegramConfig',
 
     'rest_framework',
     'rest_framework.authtoken',
