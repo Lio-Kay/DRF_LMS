@@ -1,37 +1,17 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
 from django.core import exceptions as django_exceptions
-from django.db import IntegrityError, transaction
-from djoser import utils
 from djoser.conf import settings
-from rest_framework import serializers, exceptions
-from rest_framework.exceptions import ValidationError
+from djoser.serializers import (UserCreateMixin, UidAndTokenSerializer,
+                                ActivationSerializer, PasswordSerializer,
+                                PasswordRetypeSerializer)
+from rest_framework import serializers
 from rest_framework.settings import api_settings
 
 User = get_user_model()
 
 
-class UserCreateMixin:
-    """
-    Миксин для UserCreateSerializer
-    """
-    def create(self, validated_data):
-        try:
-            user = self.perform_create(validated_data)
-        except IntegrityError:
-            self.fail('cannot_create_user')
-        return user
-
-    def perform_create(self, validated_data):
-        with transaction.atomic():
-            user = User.objects.create_user(**validated_data)
-            if settings.SEND_ACTIVATION_EMAIL:
-                user.is_active = False
-                user.save(update_fields=['is_active'])
-        return user
-
-
-class UserCreateSerializer(UserCreateMixin, serializers.ModelSerializer):
+class CustomUserCreateSerializer(UserCreateMixin, serializers.ModelSerializer):
     """
     Сериализатор регистрации нового пользователя
     #/users
@@ -74,82 +54,34 @@ class UserCreateSerializer(UserCreateMixin, serializers.ModelSerializer):
         self.fail('password_mismatch')
 
 
-class UidAndTokenSerializer(serializers.Serializer):
+class CustomUidAndTokenSerializer(UidAndTokenSerializer):
     """
     Сериализатор для ввода ID и токена верификации
-    #/users/activation/
     """
     uid = serializers.CharField(label='ID пользователя')
     token = serializers.CharField(label='Токен верификации')
 
-    default_error_messages = {
-        'invalid_token': settings.CONSTANTS.messages.INVALID_TOKEN_ERROR,
-        'invalid_uid': settings.CONSTANTS.messages.INVALID_UID_ERROR,
-    }
 
-    def validate(self, attrs):
-        validated_data = super().validate(attrs)
-        # uid validation have to be here, because validate_<field_name>
-        # doesn't work with modelserializer
-        try:
-            uid = utils.decode_uid(self.initial_data.get('uid', ''))
-            self.user = User.objects.get(pk=uid)
-        except (User.DoesNotExist, ValueError, TypeError, OverflowError):
-            key_error = 'invalid_uid'
-            raise ValidationError(
-                {'uid': [self.error_messages[key_error]]},
-                code=key_error
-            )
-        is_token_valid = self.context['view'].token_generator.check_token(
-            self.user, self.initial_data.get('token', '')
-        )
-        if is_token_valid:
-            return validated_data
-        else:
-            key_error = 'invalid_token'
-            raise ValidationError(
-                {'token': [self.error_messages[key_error]]},
-                code=key_error
-            )
-
-
-class ActivationSerializer(UidAndTokenSerializer):
+class CustomActivationSerializer(CustomUidAndTokenSerializer,
+                                 ActivationSerializer):
     """
     Сериализатор для активации нового пользователя данными из письма
+
     #/users/activation/
     """
-    default_error_messages = {
-        'stale_token': settings.CONSTANTS.messages.STALE_TOKEN_ERROR
-    }
-
-    def validate(self, attrs):
-        attrs = super().validate(attrs)
-        if not self.user.is_active:
-            return attrs
-        raise exceptions.PermissionDenied(self.error_messages['stale_token'])
+    pass
 
 
-class PasswordSerializer(serializers.Serializer):
+class CustomPasswordSerializer(PasswordSerializer):
     """
     Сериализатор нового пароля активированного пользователя
     """
     new_password = serializers.CharField(
         style={'input_type': 'password'}, label='Новый пароль')
 
-    def validate(self, attrs):
-        user = getattr(self, 'user', None) or self.context['request'].user
-        # why assert? There are ValidationError / fail everywhere
-        assert user is not None
 
-        try:
-            validate_password(attrs['new_password'], user)
-        except django_exceptions.ValidationError as e:
-            raise serializers.ValidationError(
-                {'new_password': list(e.messages)})
-        return super().validate(attrs)
-
-
-class PasswordRetypeSerializer(PasswordSerializer):
+class CustomPasswordRetypeSerializer(CustomPasswordSerializer,
+                                     PasswordRetypeSerializer):
     """
     Сериализатор добавления поля повторения пароля
 
@@ -159,21 +91,9 @@ class PasswordRetypeSerializer(PasswordSerializer):
     re_new_password = serializers.CharField(
         style={'input_type': 'password'}, label='Повторите пароль')
 
-    default_error_messages = {
-        'password_mismatch':
-            settings.CONSTANTS.messages.PASSWORD_MISMATCH_ERROR
-    }
 
-    def validate(self, attrs):
-        attrs = super().validate(attrs)
-        if attrs['new_password'] == attrs['re_new_password']:
-            return attrs
-        else:
-            self.fail('password_mismatch')
-
-
-class PasswordResetConfirmRetypeSerializer(UidAndTokenSerializer,
-                                           PasswordRetypeSerializer):
+class CustomPasswordResetConfirmRetypeSerializer(CustomUidAndTokenSerializer,
+                                                 CustomPasswordRetypeSerializer):
     """
     Сериализатор объединяющий ввод ID и токена верификации и пароля с проверкой
 
