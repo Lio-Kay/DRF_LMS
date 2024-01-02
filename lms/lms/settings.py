@@ -177,7 +177,6 @@ if os.getenv('CAMEL_CASE') == 'True':
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
 # Djangorestframework-simplejwt
@@ -226,31 +225,33 @@ SIMPLE_JWT = {
 # https://djoser.readthedocs.io/en/latest/settings.html
 DJOSER = {
     'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
-    'USERNAME_RESET_CONFIRM_URL': '#/username/reset/confirm/{uid}/{token}',
+    'USERNAME_RESET_CONFIRM_URL': '',
     'SEND_ACTIVATION_EMAIL': True,
     'SEND_CONFIRMATION_EMAIL': True,
     'ACTIVATION_URL': '#/activate/{uid}/{token}',
     'USER_CREATE_PASSWORD_RETYPE': True,
+    'SET_PASSWORD_RETYPE': True,
     'PASSWORD_RESET_CONFIRM_RETYPE': True,
     'SERIALIZERS': {
         'activation': 'accounts.serializers.CustomActivationSerializer',
         'password_reset': 'djoser.serializers.SendEmailResetSerializer',
-        # 'password_reset_confirm': 'accounts.serializers.PasswordResetConfirmSerializer',
         'password_reset_confirm_retype': 'accounts.serializers.CustomPasswordResetConfirmRetypeSerializer',
-        'set_password': 'djoser.serializers.SetPasswordSerializer',
         'set_password_retype': 'djoser.serializers.SetPasswordRetypeSerializer',
         'set_username': 'djoser.serializers.SetUsernameSerializer',
         'set_username_retype': 'djoser.serializers.SetUsernameRetypeSerializer',
         'username_reset': 'djoser.serializers.SendEmailResetSerializer',
         'username_reset_confirm': 'djoser.serializers.UsernameResetConfirmSerializer',
         'username_reset_confirm_retype': 'djoser.serializers.UsernameResetConfirmRetypeSerializer',
-        # 'user_create': 'accounts.serializers.UserCreateSerializer',
         'user_create_password_retype': 'accounts.serializers.CustomUserCreateSerializer',
         'user_delete': 'djoser.serializers.UserDeleteSerializer',
         'user': 'djoser.serializers.UserSerializer',
         'current_user': 'djoser.serializers.UserSerializer',
         'token': 'djoser.serializers.TokenSerializer',
         'token_create': 'accounts.serializers.CustomTokenCreateSerializer',
+        # Not used
+        # 'password_reset_confirm': 'djoser.serializers.PasswordResetConfirmSerializer',
+        # 'set_password': 'djoser.serializers.SetPasswordSerializer',
+        # 'user_create': 'djoser.serializers.UserCreateSerializer',
     },
     'EMAIL': {
         'activation': 'djoser.email.ActivationEmail',
@@ -268,9 +269,11 @@ DJOSER = {
         'password_reset': ['rest_framework.permissions.AllowAny'],
         'password_reset_confirm': ['rest_framework.permissions.AllowAny'],
         'set_password': ['djoser.permissions.CurrentUserOrAdmin'],
-        'username_reset': ['rest_framework.permissions.AllowAny'],
-        'username_reset_confirm': ['rest_framework.permissions.AllowAny'],
-        'set_username': ['djoser.permissions.CurrentUserOrAdmin'],
+        # Not used since USERNAME_FIELD = 'email'
+        'username_reset': ['rest_framework.permissions.IsAdminUser'],
+        'username_reset_confirm': ['rest_framework.permissions.IsAdminUser'],
+        'set_username': ['djoser.permissions.IsAdminUser'],
+
         'user_create': ['rest_framework.permissions.AllowAny'],
         'user_delete': ['djoser.permissions.CurrentUserOrAdmin'],
         'user': ['djoser.permissions.CurrentUserOrAdmin'],
