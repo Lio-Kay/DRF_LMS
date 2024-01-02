@@ -5,7 +5,8 @@ from djoser.conf import settings
 from djoser.serializers import (UserCreateMixin, UidAndTokenSerializer,
                                 ActivationSerializer, PasswordSerializer,
                                 PasswordRetypeSerializer,
-                                TokenCreateSerializer, TokenSerializer)
+                                TokenCreateSerializer, TokenSerializer,
+                                CurrentPasswordSerializer)
 from rest_framework import serializers
 from rest_framework.settings import api_settings
 
@@ -104,10 +105,19 @@ class CustomPasswordRetypeSerializer(CustomPasswordSerializer,
         style={'input_type': 'password'}, label='Повторите пароль')
 
 
+class CustomCurrentPasswordSerializer(CurrentPasswordSerializer):
+    current_password = serializers.CharField(
+        style={'input_type': 'password'}, label='Пароль')
+
+
 class CustomTokenSerializer(TokenSerializer):
     auth_token = serializers.CharField(
         source='key', label='Токен аутентификации')
 
+
+class CustomSetPasswordRetypeSerializer(CustomPasswordRetypeSerializer,
+                                        CustomCurrentPasswordSerializer):
+    pass
 
 
 class CustomPasswordResetConfirmRetypeSerializer(CustomUidAndTokenSerializer,
