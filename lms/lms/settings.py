@@ -228,7 +228,7 @@ DJOSER = {
     'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
     'USERNAME_RESET_CONFIRM_URL': '',
     'SEND_ACTIVATION_EMAIL': True,
-    'SEND_CONFIRMATION_EMAIL': True,
+    'SEND_CONFIRMATION_EMAIL': False,
     'ACTIVATION_URL': '#/activate/{uid}/{token}',
     'USER_CREATE_PASSWORD_RETYPE': True,
     'SET_PASSWORD_RETYPE': True,
@@ -255,12 +255,13 @@ DJOSER = {
         # 'user_create': 'djoser.serializers.UserCreateSerializer',
     },
     'EMAIL': {
-        'activation': 'djoser.email.ActivationEmail',
-        'confirmation': 'djoser.email.ConfirmationEmail',
-        'password_reset': 'djoser.email.PasswordResetEmail',
-        'password_changed_confirmation': 'djoser.email.PasswordChangedConfirmationEmail',
-        'username_changed_confirmation': 'djoser.email.UsernameChangedConfirmationEmail',
-        'username_reset': 'djoser.email.UsernameResetEmail',
+        'activation': 'accounts.email.CustomActivationEmail',
+        'password_reset': 'accounts.email.CustomPasswordResetEmail',
+        # Not used
+        # 'confirmation': 'djoser.email.ConfirmationEmail',
+        # 'password_changed_confirmation': 'djoser.email.PasswordChangedConfirmationEmail',
+        # 'username_changed_confirmation': 'djoser.email.UsernameChangedConfirmationEmail',
+        # 'username_reset': 'djoser.email.UsernameResetEmail',
     },
     'CONSTANTS': {
         'messages': 'djoser.constants.Messages',
