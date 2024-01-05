@@ -57,7 +57,7 @@ class CustomUserTest(TestCase):
             age=25,
             gender='MALE',
             phone='+1234567890',
-            city='Test City'
+            city='Test_City'
         )
 
     def tearDown(self):
@@ -70,7 +70,7 @@ class CustomUserTest(TestCase):
         self.assertEqual(self.user.age, 25)
         self.assertEqual(self.user.gender, 'MALE')
         self.assertEqual(self.user.phone, '+1234567890')
-        self.assertEqual(self.user.city, 'Test City')
+        self.assertEqual(self.user.city, 'Test_City')
         self.assertTrue(self.user.check_password('password123'))
 
     def test_str_representation(self):
