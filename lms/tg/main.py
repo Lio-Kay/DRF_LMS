@@ -48,13 +48,10 @@ async def handle_phone_number(update: Update,
         )
 
 
-if __name__ == '__main__':
+class RunBot:
     application = ApplicationBuilder().token(settings.TG_TOKEN).build()
-
     start_handler = CommandHandler('start', start)
     application.add_handler(start_handler)
-
     phone_number_handler = MessageHandler(filters.CONTACT, handle_phone_number)
     application.add_handler(phone_number_handler)
-
     application.run_polling()
