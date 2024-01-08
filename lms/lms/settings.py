@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'djoser',
 
+    'django_celery_beat',
     'drf_spectacular',
     'drf_spectacular_sidecar',
     'djmoney',
@@ -339,3 +340,12 @@ EMAIL_TIMEOUT = 60
 
 # Telegram
 TG_TOKEN = os.getenv('TG_TOKEN')
+
+# Celery Configuration
+# https://docs.celeryq.dev/en/stable/userguide/configuration.html
+CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')
+CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND')
+CELERY_TIMEZONE = os.getenv('TIME_ZONE')
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 60 * 10
+CELERY_BEAT_SCHEDULE = {}
