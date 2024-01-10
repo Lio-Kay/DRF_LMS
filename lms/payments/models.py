@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 from django.db import models
 
 from education.models import Section
@@ -53,3 +54,9 @@ class Payment(models.Model):
         verbose_name = 'оплата'
         verbose_name_plural = 'оплаты'
         ordering = 'paid_section',
+
+    def clean(self):
+        # Проверка отсутствия оставшихся платежей при полной оплате
+        if self.payment_type == 'FULL' and self.payments_left > 0:
+            raise ValidationError('Полная оплата не может иметь '
+                                  'оставшиеся платежи')
