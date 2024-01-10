@@ -17,11 +17,10 @@ class Payment(models.Model):
     user = models.ForeignKey(
         to=User, on_delete=models.RESTRICT, verbose_name='Пользователь',
         related_name='payments')
-    last_payment_date = models.DateTimeField(
-        auto_now=True, verbose_name='Дата последней оплаты')
     paid_section = models.ForeignKey(
-        **NULLABLE, to=Section, on_delete=models.SET_NULL,
+        to=Section, on_delete=models.RESTRICT, verbose_name='Раздел',
         related_name='payments')
+
     payment_type_choices = [
         ('FULL', 'Полная'),
         ('SHARE_30D4P', 'Долями. 30 дней. 4 оплаты'),
@@ -37,6 +36,8 @@ class Payment(models.Model):
         verbose_name='Способ оплаты')
     payments_left = models.PositiveSmallIntegerField(
         default=0, verbose_name='Кол-во оставшихся оплат')
+    last_payment_date = models.DateTimeField(
+        auto_now=True, verbose_name='Дата последней оплаты')
 
     def __str__(self):
         if self.payments_left == 0:
