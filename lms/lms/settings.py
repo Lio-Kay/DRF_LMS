@@ -37,6 +37,7 @@ ADMINS = [
 INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'education.apps.EducationConfig',
+    'payments.apps.PaymentsConfig',
     'tg.apps.TGConfig',
 
     'rest_framework',
