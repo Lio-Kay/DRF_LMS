@@ -22,22 +22,22 @@ class Payment(models.Model):
         related_name='payments')
 
     payment_type_choices = [
-        ('FULL', 'Полная'),
-        ('SHARE_30D4P', 'Долями. 30 дней. 4 оплаты'),
+        ('FULL', 'Полный'),
+        ('SHARE_30D4P', 'Долями. 30 дней. 4 платежа'),
     ]
     payment_type = models.CharField(
         max_length=11, choices=payment_type_choices,
-        verbose_name='Тип оплаты')
+        verbose_name='Тип платежа')
     payment_method_choices = [
         ('STIPE', 'Ссылка STRIPE'),
     ]
     payment_method = models.CharField(
         max_length=5, choices=payment_method_choices,
-        verbose_name='Способ оплаты')
+        verbose_name='Способ платежа')
     payments_left = models.PositiveSmallIntegerField(
-        default=0, verbose_name='Кол-во оставшихся оплат')
+        default=0, verbose_name='Кол-во оставшихся платежей')
     last_payment_date = models.DateTimeField(
-        auto_now=True, verbose_name='Дата последней оплаты')
+        auto_now=True, verbose_name='Дата последнего платежа')
 
     def __str__(self):
         if self.payments_left == 0:
@@ -48,16 +48,16 @@ class Payment(models.Model):
         return (f'Пользователь: {self.user.first_name} '
                 f'{self.user.last_name}, '
                 f'Курс: {self.paid_section}, '
-                f'Тип оплаты: {self.payment_type} '
-                f'Осталось оплат: {self.payments_left}')
+                f'Тип платежа: {self.payment_type}, '
+                f'Осталось платежей: {self.payments_left}')
 
     class Meta:
-        verbose_name = 'оплата'
-        verbose_name_plural = 'оплаты'
+        verbose_name = 'платеж'
+        verbose_name_plural = 'платежи'
         ordering = 'paid_section',
 
     def clean(self):
         # Проверка отсутствия оставшихся платежей при полной оплате
         if self.payment_type == 'FULL' and self.payments_left > 0:
-            raise ValidationError('Полная оплата не может иметь '
+            raise ValidationError('Полный платеж не может иметь '
                                   'оставшиеся платежи')
