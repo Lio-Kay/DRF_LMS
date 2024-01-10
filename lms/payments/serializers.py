@@ -18,3 +18,5 @@ class PaymentSerializer(serializers.ModelSerializer):
         fields = ('pk', 'user', 'paid_section',
                   'payment_type', 'payment_method', 'payments_left',
                   'last_payment_date',)
+        read_only_fields = ('payment_type', 'payment_method', 'payments_left',
+                            'last_payment_date',)
