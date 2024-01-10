@@ -42,11 +42,11 @@ class Payment(models.Model):
     def __str__(self):
         if self.payments_left == 0:
             return (f'Пользователь: {self.user.first_name} '
-                    f'{self.user.last_name}, '
+                    f'{self.user.last_name} {self.user.email}, '
                     f'Курс: {self.paid_section}, '
                     f'Оплачен полностью')
         return (f'Пользователь: {self.user.first_name} '
-                f'{self.user.last_name}, '
+                f'{self.user.last_name} {self.user.email}, '
                 f'Курс: {self.paid_section}, '
                 f'Тип платежа: {self.payment_type}, '
                 f'Осталось платежей: {self.payments_left}')
