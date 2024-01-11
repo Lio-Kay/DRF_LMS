@@ -99,3 +99,4 @@ class CustomUser(AbstractUser):
         verbose_name = 'пользователя'
         verbose_name_plural = 'пользователи'
         ordering = 'email',
+        db_table_comment = 'Кастомная и основная модель пользователя'

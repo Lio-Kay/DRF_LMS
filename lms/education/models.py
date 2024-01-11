@@ -64,6 +64,8 @@ class Media(models.Model):
         verbose_name = 'медиа'
         verbose_name_plural = 'медиа'
         ordering = 'name',
+        db_table_comment = ('Модель медиафайла для разделов, материалов, '
+                            'вопросов к тестам')
 
     def clean(self):
         # Проверка на обязательный выбор только одного медиа файла
@@ -125,6 +127,7 @@ class Section(models.Model):
         verbose_name = 'раздел'
         verbose_name_plural = 'разделы'
         ordering = 'name',
+        db_table_comment = 'Модель раздела'
         constraints = [
             # Проверка даты обновления позже или одинаковой с датой создания
             models.CheckConstraint(
@@ -188,7 +191,8 @@ class Material(models.Model):
     class Meta:
         verbose_name = 'материал'
         verbose_name_plural = 'материалы'
-        ordering = 'name',
+        order_with_respect_to = 'section'
+        db_table_comment = 'Модель материала к разделам'
         constraints = [
             # Проверка даты обновления позже или одинаковой с датой создания
             models.CheckConstraint(
@@ -236,6 +240,7 @@ class TestAnswer(models.Model):
         verbose_name = 'ответ на тест'
         verbose_name_plural = 'ответы на тест'
         ordering = 'answer',
+        db_table_comment = 'Модель ответа на вопрос теста'
 
 
 class TestQuestion(models.Model):
@@ -259,6 +264,7 @@ class TestQuestion(models.Model):
         verbose_name = 'вопрос на тест'
         verbose_name_plural = 'вопросы на тесты'
         ordering = 'question',
+        db_table_comment = 'Модель вопроса к тесту'
 
 
 class Test(models.Model):
@@ -285,6 +291,7 @@ class Test(models.Model):
         verbose_name = 'тест'
         verbose_name_plural = 'тесты'
         ordering = 'material',
+        db_table_comment = 'Модель теста к материалу'
         constraints = [
             # Проверка даты обновления позже или одинаковой с датой создания
             models.CheckConstraint(
