@@ -1,5 +1,4 @@
 from django.contrib.admin.sites import AdminSite
-from django.contrib.auth import get_user_model
 from django.test import TestCase, RequestFactory
 from django.utils import timezone
 
@@ -8,8 +7,6 @@ from education.admin import (SectionAdmin, MaterialAdmin, TestQuestionAdmin,
                              set_archived_status, set_closed_status,
                              set_open_status)
 from education.models import Section, Material, TestAnswer, TestQuestion
-
-User = get_user_model()
 
 
 class AdminActionsTests(TestCase):
