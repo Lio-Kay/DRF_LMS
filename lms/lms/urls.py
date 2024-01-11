@@ -38,4 +38,6 @@ urlpatterns = [
          include('accounts.urls', namespace='accounts')),
     path('api/v1/education/',
          include('education.urls', namespace='education')),
+    path('api/v1/payments/',
+         include('payments.urls', namespace='payments')),
 ]
