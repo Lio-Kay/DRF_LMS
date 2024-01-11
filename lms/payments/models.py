@@ -43,12 +43,12 @@ class Payment(models.Model):
         if self.payments_left == 0:
             return (f'Пользователь: {self.user.first_name} '
                     f'{self.user.last_name} {self.user.email}, '
-                    f'Курс: {self.paid_section}, '
+                    f'Курс: {self.paid_section.name}, '
                     f'Оплачен полностью')
         return (f'Пользователь: {self.user.first_name} '
                 f'{self.user.last_name} {self.user.email}, '
-                f'Курс: {self.paid_section}, '
-                f'Тип платежа: {self.payment_type}, '
+                f'Курс: {self.paid_section.name}, '
+                f'Тип платежа: {self.get_payment_type_display()}, '
                 f'Осталось платежей: {self.payments_left}')
 
     class Meta:
