@@ -117,7 +117,7 @@ class SectionModelTests(TestCase):
         self.assertEqual(section.status, 'CLOSED')
 
     def test_constraint(self):
-        # Проверка даты обновления позже или c одинаковой с датой создания
+        # Проверка даты обновления позже или с одинаковой с датой создания
         with self.assertRaises(IntegrityError):
             with transaction.atomic():
                 Section.objects.create(
@@ -127,7 +127,7 @@ class SectionModelTests(TestCase):
                 )
 
     def test_clean_method(self):
-        # Проверка даты обновления позже или c одинаковой с датой создания
+        # Проверка даты обновления позже или с одинаковой с датой создания
         with self.assertRaises(IntegrityError):
             with self.assertRaises(ValidationError):
                 with transaction.atomic():
@@ -215,7 +215,7 @@ class MaterialModelTests(TestCase):
             name='Test_Section',
             status='ARCHIVED')
 
-        # Проверка даты обновления позже или c одинаковой с датой создания
+        # Проверка даты обновления позже или с одинаковой с датой создания
         with self.assertRaises(IntegrityError):
             with self.assertRaises(ValidationError):
                 with transaction.atomic():
@@ -254,9 +254,7 @@ class MaterialModelTests(TestCase):
         )
         with self.assertRaises(ValidationError):
             material.clean()
-        section = Section.objects.create(
-            name='Test_Section',
-            status='CLOSED')
+        section.status = 'CLOSED'
         with self.assertRaises(ValidationError):
             material.clean()
 
@@ -355,7 +353,7 @@ class TestModelTests(TestCase):
         self.assertEqual(str(self.test), expected_str)
 
     def test_constraint(self):
-        # Проверка даты обновления позже или c одинаковой с датой создания
+        # Проверка даты обновления позже или с одинаковой с датой создания
         with self.assertRaises(IntegrityError):
             with transaction.atomic():
                 Test.objects.create(
@@ -364,7 +362,7 @@ class TestModelTests(TestCase):
                 )
 
     def test_clean_method(self):
-        # Проверка даты обновления позже или c одинаковой с датой создания
+        # Проверка даты обновления позже или с одинаковой с датой создания
         with self.assertRaises(IntegrityError):
             with self.assertRaises(ValidationError):
                 with transaction.atomic():
