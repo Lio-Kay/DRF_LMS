@@ -99,8 +99,10 @@ class SectionModelTests(TestCase):
         self.assertEqual(self.section.name, 'Test_Section')
         self.assertEqual(self.section.description, 'Test_Description')
         self.assertEqual(self.section.status, 'OPEN')
-        self.assertEqual(self.section.creation_date, '2023-01-01T00:00:00Z')
-        self.assertEqual(self.section.last_update, '2023-01-01T00:00:00Z')
+        self.assertEqual(self.section.creation_date,
+                         '2023-01-01T00:00:00Z')
+        self.assertEqual(self.section.last_update,
+                         '2023-01-01T00:00:00Z')
         self.assertEqual(self.section.base_price.amount, 100)
         self.assertIn(self.media, self.section.media.all())
 
@@ -182,8 +184,10 @@ class MaterialModelTests(TestCase):
         self.assertEqual(self.material.name, 'Test_Material')
         self.assertEqual(self.material.text, 'Test_Text')
         self.assertEqual(self.material.status, 'CLOSED')
-        self.assertEqual(self.material.creation_date, '2023-01-01T00:00:00Z')
-        self.assertEqual(self.material.last_update, '2023-01-01T00:00:00Z')
+        self.assertEqual(self.material.creation_date,
+                         '2023-01-01T00:00:00Z')
+        self.assertEqual(self.material.last_update,
+                         '2023-01-01T00:00:00Z')
         self.assertEqual(self.material.section, self.section)
         self.assertIn(self.media, self.material.media.all())
 
@@ -336,11 +340,15 @@ class TestModelTests(TestCase):
         tests_count = Test.objects.count()
         self.assertEqual(tests_count, 1)
         self.assertEqual(self.test.material, self.material)
-        self.assertEqual(self.test.creation_date, '2023-01-01T00:00:00Z')
-        self.assertEqual(self.test.last_update, '2023-01-01T00:00:00Z')
+        self.assertEqual(self.test.creation_date,
+                         '2023-01-01T00:00:00Z')
+        self.assertEqual(self.test.last_update,
+                         '2023-01-01T00:00:00Z')
         self.assertEqual(self.test.question.count(), 1)
-        self.assertEqual(self.test.question.first().question, 'Question')
-        self.assertEqual(self.test.question.first().answer.answer, 'Answer1')
+        self.assertEqual(self.test.question.first().question,
+                         'Question')
+        self.assertEqual(self.test.question.first().answer.answer,
+                         'Answer1')
 
     def test_str_representation(self):
         expected_str = 'Вопрос: Question, Дата создания: 2023-01-01T00:00:00Z'
