@@ -54,7 +54,8 @@ class Payment(models.Model):
     class Meta:
         verbose_name = 'платеж'
         verbose_name_plural = 'платежи'
-        ordering = 'paid_section',
+        order_with_respect_to = 'user'
+        db_table_comment = 'Модель платежей за разделы'
 
     def clean(self):
         # Проверка отсутствия оставшихся платежей при полной оплате
