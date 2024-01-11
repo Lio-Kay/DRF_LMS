@@ -119,7 +119,7 @@ class Section(models.Model):
         verbose_name='Медиа')
 
     def __str__(self):
-        return (f'Название: {self.name}, Статус: {self.status}, '
+        return (f'Название: {self.name}, Статус: {self.get_status_display()}, '
                 f'Дата создания: {self.creation_date}, '
                 f'Базовая цена: {self.base_price}')
 
@@ -185,7 +185,7 @@ class Material(models.Model):
         related_name='material_section', verbose_name='Раздел')
 
     def __str__(self):
-        return (f'Название: {self.name}, Статус: {self.status}, '
+        return (f'Название: {self.name}, Статус: {self.get_status_display()}, '
                 f'Дата создания: {self.creation_date}')
 
     class Meta:

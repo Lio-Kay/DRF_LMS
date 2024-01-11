@@ -107,7 +107,7 @@ class SectionModelTests(TestCase):
         self.assertIn(self.media, self.section.media.all())
 
     def test_str_representation(self):
-        expected_str = ('Название: Test_Section, Статус: OPEN, '
+        expected_str = ('Название: Test_Section, Статус: Открытый, '
                         'Дата создания: 2023-01-01T00:00:00Z, '
                         'Базовая цена: 100,00\xa0₽')
         self.assertEqual(str(self.section), expected_str)
@@ -193,7 +193,7 @@ class MaterialModelTests(TestCase):
 
     def test_str_representation(self):
         expected_str = ('Название: Test_Material, '
-                        'Статус: CLOSED, '
+                        'Статус: Закрытый, '
                         'Дата создания: 2023-01-01T00:00:00Z')
         self.assertEqual(str(self.material), expected_str)
 
