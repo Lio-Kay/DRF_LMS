@@ -342,6 +342,10 @@ EMAIL_TIMEOUT = 60
 # Telegram
 TG_TOKEN = os.getenv('TG_TOKEN')
 
+# Stripe
+STRIPE_PUBLISHABLE_API_KEY = os.getenv('STRIPE_PUBLISHABLE_API_KEY')
+STRIPE_SECRET_API_KEY = os.getenv('STRIPE_SECRET_API_KEY')
+
 # Celery Configuration
 # https://docs.celeryq.dev/en/stable/userguide/configuration.html
 CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')
