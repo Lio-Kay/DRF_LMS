@@ -4,7 +4,7 @@ from payments.models import Payment
 
 
 class PaymentSerializer(serializers.ModelSerializer):
-    paid_section = serializers.SerializerMethodField('get_section')
+    paid_section = serializers.SerializerMethodField('get_paid_section')
     user = serializers.SerializerMethodField('get_user')
 
     def get_paid_section(self, obj):
