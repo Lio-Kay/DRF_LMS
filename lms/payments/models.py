@@ -1,6 +1,11 @@
+import re
+
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
+from django.core.validators import MinLengthValidator
 from django.db import models
+from django.utils import timezone
+import calendar
 
 from education.models import Section
 from payments.apps import PaymentsConfig
@@ -62,3 +67,63 @@ class Payment(models.Model):
         if self.payment_type == 'FULL' and self.payments_left > 0:
             raise ValidationError('Полный платеж не может иметь '
                                   'оставшиеся платежи')
+
+
+class UserCardData(models.Model):
+    """Модель банковской карты пользователя"""
+    card_number = models.CharField(
+        max_length=16, validators=[MinLengthValidator(16)],
+        verbose_name='Номер карты')
+    owner_name = models.CharField(max_length=100, verbose_name='Владелец')
+    expiration_month = models.PositiveSmallIntegerField(
+        max_length=12, validators=[MinLengthValidator(1)],
+        verbose_name='Месяц действия')
+    expiration_year = models.PositiveSmallIntegerField(
+        verbose_name='Год действия')
+
+    user = models.ForeignKey(to=User, on_delete=models.RESTRICT)
+
+    def __str__(self):
+        return (f'Номер карты: {self.card_number}, '
+                f'Владелец: {self.owner_name}, '
+                f'Срок действия: {self.expiration_month}/{self.expiration_year}')
+
+    class Meta:
+        verbose_name = 'банковская карта'
+        verbose_name_plural = 'банковские карты'
+        order = 'card_number'
+        db_table_comment = 'Модель банковской карты пользователя'
+
+    @staticmethod
+    def validate_card_number(card_number):
+        # Алгоритм Луна для проверки на ошибки
+        digits = [int(digit) for digit in card_number]
+        checksum = sum(digits[-1::-2] +
+                       [sum(divmod(d * 2, 10)) for d in digits[-2::-2]])
+        return checksum % 10 == 0
+
+    def get_expiration_date(self):
+        if self.expiration_month and self.expiration_year:
+            last_day_of_month = calendar.monthrange(
+                self.expiration_year, self.expiration_month)[1]
+            return timezone.datetime.date(
+                self.expiration_year, self.expiration_month, last_day_of_month)
+
+    @staticmethod
+    def validate_latin_characters(text):
+        return bool(re.match('^[a-zA-Z\s]+$', text))
+
+    def clean(self):
+        # Валидация номера карты по алгоритму Луна
+        if not self.validate_card_number(self.card_number):
+            raise ValidationError(
+                {'card_number': 'Ошибка в номере карты'})
+        # Валидация срока действия
+        expiration_date = self.get_expiration_date()
+        if expiration_date and expiration_date < timezone.now().date():
+            raise ValidationError(
+                {'expiration_month': 'Срок действия карты истек'})
+        # Валидация латинских символов в имени владельца
+        if not self.validate_latin_characters(self.owner_name):
+            raise ValidationError(
+                {'owner_name': 'Имя владельца должно быть на латинице'})
