@@ -6,8 +6,10 @@ from payments.validators import (ExpiryMonthValidator, ExpiryYearValidator,
 
 
 class PaymentSerializer(serializers.ModelSerializer):
-    paid_section = serializers.SerializerMethodField('get_paid_section')
-    user = serializers.SerializerMethodField('get_user')
+    paid_section = serializers.SerializerMethodField(
+        'get_paid_section', label='Оплаченный раздел')
+    user = serializers.SerializerMethodField(
+        'get_user', label='Пользователь')
 
     def get_paid_section(self, obj):
         return obj.paid_section.name
@@ -25,7 +27,7 @@ class PaymentSerializer(serializers.ModelSerializer):
 
 
 class CardInfoSerializer(serializers.ModelSerializer):
-    cvc = serializers.CharField(max_length=3)
+    cvc = serializers.CharField(max_length=3, label='3-ый код')
 
     class Meta:
         model = UserCardData
