@@ -26,11 +26,6 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        Material.objects.all().delete()
-        TestAnswer.objects.all().delete()
-        TestQuestion.objects.all().delete()
-        Test.objects.all().delete()
-
         # Media
         Media.objects.all().delete()
         media1 = Media.objects.create(
