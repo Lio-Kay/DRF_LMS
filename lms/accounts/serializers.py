@@ -33,7 +33,7 @@ class CustomUserSerializer(UserSerializer):
     """
     class Meta:
         model = User
-        fields = ('email', 'phone',
+        fields = ('pk', 'email', 'phone',
                   'first_name', 'last_name',
                   'age', 'gender', 'city', 'avatar',)
         read_only_fields = (settings.LOGIN_FIELD, 'phone',)
