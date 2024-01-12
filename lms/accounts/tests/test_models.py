@@ -4,12 +4,12 @@ from django.test import TestCase
 
 from accounts.models import CustomUser
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 class CustomUserManagerTest(TestCase):
     def setUp(self):
-        self.manager = UserModel.objects
+        self.manager = User.objects
 
     def test_create_user(self):
         user = self.manager.create_user('testuser@example.com', 'password123')
