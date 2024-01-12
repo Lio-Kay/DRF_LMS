@@ -76,7 +76,6 @@ class UserCardData(models.Model):
         verbose_name='Номер карты')
     owner_name = models.CharField(max_length=100, verbose_name='Владелец')
     expiration_month = models.PositiveSmallIntegerField(
-        max_length=12, validators=[MinLengthValidator(1)],
         verbose_name='Месяц действия')
     expiration_year = models.PositiveSmallIntegerField(
         verbose_name='Год действия')
@@ -91,7 +90,7 @@ class UserCardData(models.Model):
     class Meta:
         verbose_name = 'банковская карта'
         verbose_name_plural = 'банковские карты'
-        order = 'card_number'
+        ordering = 'card_number',
         db_table_comment = 'Модель банковской карты пользователя'
 
     @staticmethod
