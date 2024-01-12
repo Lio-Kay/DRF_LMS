@@ -1,6 +1,8 @@
 from rest_framework import serializers
 
-from payments.models import Payment
+from payments.models import Payment, UserCardData
+from payments.validators import (ExpiryMonthValidator, ExpiryYearValidator,
+                                 CVCValidator)
 
 
 class PaymentSerializer(serializers.ModelSerializer):
@@ -20,3 +22,17 @@ class PaymentSerializer(serializers.ModelSerializer):
                   'last_payment_date',)
         read_only_fields = ('payment_type', 'payment_method', 'payments_left',
                             'last_payment_date',)
+
+
+class CardInfoSerializer(serializers.ModelSerializer):
+    cvc = serializers.CharField(max_length=3)
+
+    class Meta:
+        model = UserCardData
+        fields = ('pk', 'card_number', 'owner_name',
+                  'expiration_month', 'expiration_year', 'cvc', 'user',)
+        validators = [
+            ExpiryMonthValidator(field='expiration_month'),
+            ExpiryYearValidator(field='expiration_year'),
+            CVCValidator(field='cvc'),
+        ]
