@@ -40,12 +40,14 @@ class UserPaySection(APIView):
     serializer_class = CardInfoSerializer
 
     def post(self, request, section_id):
+        # Проверяем существование раздела по pk
         try:
             section = Section.objects.get(id=section_id)
         except ObjectDoesNotExist:
-            return Response({'error': 'Course not found'},
+            return Response({'error': 'Section with this pk not found'},
                             status=status.HTTP_404_NOT_FOUND)
-
+        # Получаем данные пользователя, отправившего запрос для сериализатора
+        request.data['user'] = request.user.id
         serializer = self.serializer_class(data=request.data)
         response = {}
 
@@ -57,9 +59,8 @@ class UserPaySection(APIView):
         else:
             response = {
                 'errors': serializer.errors,
-                'status': status.HTTP_400_BAD_REQUEST
+                'status': status.HTTP_400_BAD_REQUEST,
             }
-
         return Response(response)
 
     def stripe_card_payment(self, data_dict, course):
@@ -93,30 +94,30 @@ class UserPaySection(APIView):
                 payment_intent_modified = stripe.PaymentIntent.retrieve(
                     payment_intent['id'])
                 payment_confirm = {
-                    "stripe_payment_error": "Failed",
-                    "code": payment_intent_modified['last_payment_error'][
+                    'stripe_payment_error': 'Failed',
+                    'code': payment_intent_modified['last_payment_error'][
                         'code'],
-                    "message": payment_intent_modified['last_payment_error'][
+                    'message': payment_intent_modified['last_payment_error'][
                         'message'],
-                    'status': "Failed"
+                    'status': 'Failed',
                 }
 
             if (payment_intent_modified and payment_intent_modified['status']
                     == 'succeeded'):
                 response = {
-                    'message': "Card Payment Success",
+                    'message': 'Card Payment Success',
                     'status': status.HTTP_200_OK,
                     "card_details": card_details,
                     "payment_intent": payment_intent_modified,
-                    "payment_confirm": payment_confirm
+                    "payment_confirm": payment_confirm,
                 }
             else:
                 response = {
-                    'message': "Card Payment Failed",
+                    'message': 'Card Payment Failed',
                     'status': status.HTTP_400_BAD_REQUEST,
-                    "card_details": card_details,
-                    "payment_intent": payment_intent_modified,
-                    "payment_confirm": payment_confirm
+                    'card_details': card_details,
+                    'payment_intent': payment_intent_modified,
+                    'payment_confirm': payment_confirm,
                 }
         except Exception as e:
             response = {
