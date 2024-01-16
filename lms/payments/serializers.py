@@ -1,8 +1,8 @@
 from rest_framework import serializers
 
 from payments.models import Payment, UserCardData
-from payments.validators import (ExpiryMonthValidator, ExpiryYearValidator,
-                                 CVCValidator)
+from payments.validators import (CardNumberValidator, ExpiryMonthValidator,
+                                 ExpiryYearValidator, CVCValidator)
 
 
 class PaymentSerializer(serializers.ModelSerializer):
@@ -34,6 +34,7 @@ class CardInfoSerializer(serializers.ModelSerializer):
         fields = ('pk', 'card_number', 'owner_name',
                   'expiration_month', 'expiration_year', 'cvc', 'user',)
         validators = [
+            CardNumberValidator(field='card_number'),
             ExpiryMonthValidator(field='expiration_month'),
             ExpiryYearValidator(field='expiration_year'),
             CVCValidator(field='cvc'),
