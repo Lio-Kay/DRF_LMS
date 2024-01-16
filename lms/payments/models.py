@@ -2,7 +2,7 @@ import re
 
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
-from django.core.validators import MinLengthValidator
+from django.core.validators import MinLengthValidator, MaxLengthValidator
 from django.db import models
 from django.utils import timezone
 import calendar
@@ -72,7 +72,7 @@ class Payment(models.Model):
 class UserCardData(models.Model):
     """Модель банковской карты пользователя"""
     card_number = models.CharField(
-        max_length=16, validators=[MinLengthValidator(16)],
+        validators=[MinLengthValidator(16), MaxLengthValidator(16)],
         verbose_name='Номер карты')
     owner_name = models.CharField(max_length=100, verbose_name='Владелец')
     expiration_month = models.PositiveSmallIntegerField(
