@@ -35,8 +35,9 @@ class ExpiryYearValidator:
         self.field = field
 
     def __call__(self, value):
+        data = dict(value).get(self.field, '')
         today = timezone.datetime.now()
-        if not int(value) >= today.year:
+        if not int(data) >= today.year:
             raise serializers.ValidationError('Карта просрочена')
 
 
@@ -45,8 +46,9 @@ class CVCValidator:
         self.field = field
 
     def __call__(self, value):
+        data = dict(value).get(self.field, '')
         try:
-            int(value)
+            int(data)
         except ValueError:
             raise serializers.ValidationError(
                 'CVC должен содержать только цифры')
