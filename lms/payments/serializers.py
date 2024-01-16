@@ -27,7 +27,15 @@ class PaymentSerializer(serializers.ModelSerializer):
 
 
 class CardInfoSerializer(serializers.ModelSerializer):
-    cvc = serializers.CharField(max_length=3, label='3-ый код')
+    cvc = serializers.CharField(
+        min_length=3,
+        max_length=3,
+        label='CVC',
+        error_messages={
+            'max_length': 'CVC должен содержать не более трех символов',
+            'min_length': 'CVC должен содержать не менее трех символов',
+            'blank': 'CVC не может быть пустым',
+        })
 
     class Meta:
         model = UserCardData
