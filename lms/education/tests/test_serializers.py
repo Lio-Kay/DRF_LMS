@@ -219,7 +219,8 @@ class SectionRetrieveSerializerTest(TestCase):
         media_links = self.serializer.data['media_links']
         self.assertEqual(len(media_links), 2)
         expected_media_links = self.serializer_media.data
-        self.assertEqual(self.serializer.data['media_links'], expected_media_links)
+        self.assertEqual(
+            self.serializer.data['media_links'], expected_media_links)
 
 
 class TestAnswerSerializerTest(TestCase):

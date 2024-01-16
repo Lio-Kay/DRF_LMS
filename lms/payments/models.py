@@ -85,7 +85,8 @@ class UserCardData(models.Model):
     def __str__(self):
         return (f'Номер карты: {self.card_number}, '
                 f'Владелец: {self.owner_name}, '
-                f'Срок действия: {self.expiration_month}/{self.expiration_year}')
+                f'Срок действия: {self.expiration_month}/'
+                f'{self.expiration_year}')
 
     class Meta:
         verbose_name = 'банковская карта'

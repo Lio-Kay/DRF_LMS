@@ -1,11 +1,11 @@
 import stripe
 from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import generics
 from rest_framework import status
 from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from django.core.exceptions import ObjectDoesNotExist
 
 from education.models import Section
 from payments.models import Payment
@@ -95,10 +95,11 @@ class UserPaySection(APIView):
                     payment_intent['id'])
                 payment_confirm = {
                     'stripe_payment_error': 'Failed',
-                    'code': payment_intent_modified['last_payment_error'][
-                        'code'],
-                    'message': payment_intent_modified['last_payment_error'][
-                        'message'],
+                    'code':
+                        payment_intent_modified['last_payment_error']['code'],
+                    'message':
+                        payment_intent_modified['last_payment_error']
+                        ['message'],
                     'status': 'Failed',
                 }
 
@@ -107,9 +108,9 @@ class UserPaySection(APIView):
                 response = {
                     'message': 'Card Payment Success',
                     'status': status.HTTP_200_OK,
-                    "card_details": card_details,
-                    "payment_intent": payment_intent_modified,
-                    "payment_confirm": payment_confirm,
+                    'card_details': card_details,
+                    'payment_intent': payment_intent_modified,
+                    'payment_confirm': payment_confirm,
                 }
             else:
                 response = {
@@ -121,10 +122,10 @@ class UserPaySection(APIView):
                 }
         except Exception as e:
             response = {
-                'error': "Your card number is incorrect",
+                'error': 'Your card number is incorrect',
                 'status': status.HTTP_400_BAD_REQUEST,
-                "payment_intent": {"id": "Null"},
-                "payment_confirm": {'status': "Failed"}
+                'payment_intent': {'id': 'Null'},
+                'payment_confirm': {'status': 'Failed'}
             }
 
         return response
