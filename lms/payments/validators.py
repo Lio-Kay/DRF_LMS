@@ -45,8 +45,11 @@ class CVCValidator:
         self.field = field
 
     def __call__(self, value):
-        if not 3 <= len(value) <= 4:
-            raise serializers.ValidationError('Неверный трехзначный номер')
+        try:
+            int(value)
+        except ValueError:
+            raise serializers.ValidationError(
+                'CVC должен содержать только цифры')
 
 
 class PaymentMethodValidator:
