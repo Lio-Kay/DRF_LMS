@@ -2,7 +2,8 @@ import re
 
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
-from django.core.validators import MinLengthValidator, MaxLengthValidator
+from django.core.validators import (MinLengthValidator, MaxLengthValidator,
+                                    MinValueValidator, MaxValueValidator)
 from django.db import models
 from django.utils import timezone
 import calendar
@@ -76,6 +77,7 @@ class UserCardData(models.Model):
         verbose_name='Номер карты')
     owner_name = models.CharField(max_length=100, verbose_name='Владелец')
     expiration_month = models.PositiveSmallIntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(12)],
         verbose_name='Месяц действия')
     expiration_year = models.PositiveSmallIntegerField(
         verbose_name='Год действия')
