@@ -39,12 +39,12 @@ class UserPaymentDetailAPIView(generics.RetrieveAPIView):
 class UserPaySection(APIView):
     serializer_class = CardInfoSerializer
 
-    def post(self, request, section_id):
+    def post(self, request, section_pk):
         # Проверяем существование раздела по pk
         try:
-            section = Section.objects.get(id=section_id)
+            section = Section.objects.get(pk=section_pk)
         except ObjectDoesNotExist:
-            return Response({'error': 'Section with this pk not found'},
+            return Response({'error': 'Раздел с данным pk не найден'},
                             status=status.HTTP_404_NOT_FOUND)
         # Получаем данные пользователя, отправившего запрос для сериализатора
         request.data['user'] = request.user.id
