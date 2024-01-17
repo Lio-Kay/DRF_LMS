@@ -63,27 +63,20 @@ class UserPaySection(APIView):
             }
         return Response(response)
 
-    def stripe_card_payment(self, data_dict, course):
+    def stripe_card_payment(self, data_dict, section):
         try:
             card_details = {
-                'type': 'card',
-                'card': {
-                    'number': data_dict['card_number'],
-                    'exp_month': data_dict['expiry_month'],
-                    'exp_year': data_dict['expiry_year'],
-                    'cvc': data_dict['cvc'],
-                },
+                'number': data_dict['card_number'],
+                'exp_month': data_dict['expiration_month'],
+                'exp_year': data_dict['expiration_year'],
+                'cvc': data_dict['cvc'],
             }
-            amount = course.base_price * 100
+            amount = int(section.base_price.amount * 100)
             payment_intent = stripe.PaymentIntent.create(
                 amount=amount,
                 currency='RUB',
+                automatic_payment_methods={'enabled': True},
             )
-            payment_intent_modified = stripe.PaymentIntent.modify(
-                payment_intent['id'],
-                payment_method=card_details['id'],
-            )
-
             try:
                 payment_confirm = stripe.PaymentIntent.confirm(
                     payment_intent['id']
@@ -91,6 +84,8 @@ class UserPaySection(APIView):
                 payment_intent_modified = stripe.PaymentIntent.retrieve(
                     payment_intent['id'])
             except Exception as e:
+                print(111111111111)
+                print(e)
                 payment_intent_modified = stripe.PaymentIntent.retrieve(
                     payment_intent['id'])
                 payment_confirm = {
@@ -120,7 +115,8 @@ class UserPaySection(APIView):
                     'payment_intent': payment_intent_modified,
                     'payment_confirm': payment_confirm,
                 }
-        except Exception as e:
+        except KeyError as e:
+            print(e)
             response = {
                 'error': 'Your card number is incorrect',
                 'status': status.HTTP_400_BAD_REQUEST,
