@@ -1,3 +1,4 @@
+import icecream
 import stripe
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
@@ -38,24 +39,29 @@ class UserPaymentDetailAPIView(generics.RetrieveAPIView):
 
 class UserPaySection(APIView):
     serializer_class = CardInfoSerializer
+    stripe.api_key = settings.STRIPE_SECRET_API_KEY
 
     def post(self, request, section_pk):
         # Проверяем существование раздела по pk
         try:
             section = Section.objects.get(pk=section_pk)
         except ObjectDoesNotExist:
-            return Response({'error': 'Раздел с данным pk не найден'},
-                            status=status.HTTP_404_NOT_FOUND)
+            return Response({
+                'error': 'Раздел с данным pk не найден',
+                'requested_pk': section_pk,
+                'available_pk': list(Section.objects.all().
+                                     values_list('pk', flat=True))
+            },
+                status=status.HTTP_404_NOT_FOUND)
         # Получаем данные пользователя, отправившего запрос для сериализатора
-        request.data['user'] = request.user.id
-        serializer = self.serializer_class(data=request.data)
-        response = {}
+        request.data['user'] = request.user.pk
 
+        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
-            data_dict = serializer.data
-            stripe.api_key = settings.STRIPE_SECRET_API_KEY
+            data_dict = serializer.validated_data
             response = self.stripe_card_payment(
                 data_dict=data_dict, section=section)
+            icecream.ic(response)
         else:
             response = {
                 'errors': serializer.errors,
@@ -84,8 +90,6 @@ class UserPaySection(APIView):
                 payment_intent_modified = stripe.PaymentIntent.retrieve(
                     payment_intent['id'])
             except Exception as e:
-                print(111111111111)
-                print(e)
                 payment_intent_modified = stripe.PaymentIntent.retrieve(
                     payment_intent['id'])
                 payment_confirm = {
@@ -116,7 +120,6 @@ class UserPaySection(APIView):
                     'payment_confirm': payment_confirm,
                 }
         except KeyError as e:
-            print(e)
             response = {
                 'error': 'Your card number is incorrect',
                 'status': status.HTTP_400_BAD_REQUEST,
