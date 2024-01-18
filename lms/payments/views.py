@@ -42,20 +42,29 @@ class UserPaySection(APIView):
     stripe.api_key = settings.STRIPE_SECRET_API_KEY
 
     def post(self, request, section_pk):
-        # Проверяем существование раздела по pk
+        # Проверяем существование открытого раздела по pk
         try:
-            section = Section.objects.get(pk=section_pk)
+            section = Section.objects.get(pk=section_pk, status='OPEN')
         except ObjectDoesNotExist:
             return Response({
-                'error': 'Раздел с данным pk не найден',
+                'error': 'Открытий раздел с данным pk не найден',
                 'requested_pk': section_pk,
-                'available_pk': list(Section.objects.all().
+                'available_pk': list(Section.objects.filter(status='OPEN').
                                      values_list('pk', flat=True))
             },
                 status=status.HTTP_404_NOT_FOUND)
         # Получаем данные пользователя, отправившего запрос для сериализатора
+        user_pk = request.user.pk
         request.data['user'] = request.user.pk
-
+        # Проверяем, что раздел еще не оплачен
+        user_payments = Payment.objects.get(
+            user=user_pk, paid_section=section_pk)
+        if user_payments.payments_left == 0:
+            return Response({
+                'error': 'Раздел уже оплачен',
+                'requested_pk': section_pk,
+            },
+                status=status.HTTP_400_BAD_REQUEST)
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             data_dict = serializer.validated_data
@@ -81,7 +90,8 @@ class UserPaySection(APIView):
             payment_intent = stripe.PaymentIntent.create(
                 amount=amount,
                 currency='RUB',
-                automatic_payment_methods={'enabled': True},
+                automatic_payment_methods={'enabled': True,
+                                           'allow_redirects': 'never',},
             )
             try:
                 payment_confirm = stripe.PaymentIntent.confirm(
@@ -92,6 +102,7 @@ class UserPaySection(APIView):
             except Exception as e:
                 payment_intent_modified = stripe.PaymentIntent.retrieve(
                     payment_intent['id'])
+                # icecream.ic(payment_intent_modified)
                 payment_confirm = {
                     'stripe_payment_error': 'Failed',
                     'code':
