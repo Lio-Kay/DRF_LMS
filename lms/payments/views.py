@@ -90,9 +90,12 @@ class UserPaySection(APIView):
             payment_intent = stripe.PaymentIntent.create(
                 amount=amount,
                 currency='RUB',
+                payment_method=card_details['number'],
                 automatic_payment_methods={'enabled': True,
                                            'allow_redirects': 'never',},
             )
+            icecream.ic(payment_intent)
+            payment_intent_modified
             try:
                 payment_confirm = stripe.PaymentIntent.confirm(
                     payment_intent['id']
@@ -100,6 +103,7 @@ class UserPaySection(APIView):
                 payment_intent_modified = stripe.PaymentIntent.retrieve(
                     payment_intent['id'])
             except Exception as e:
+                icecream.ic(e)
                 payment_intent_modified = stripe.PaymentIntent.retrieve(
                     payment_intent['id'])
                 # icecream.ic(payment_intent_modified)
